@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#080a09">
-  <meta name="description" content="A student survey study of assignment start time and on-time submission.">
-  <title>До дедлайна | Deadline Dynamics</title>
+  <meta name="description" content="Student Work Timing & Submission Study">
+  <title>Overview | Deadline Dynamics</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/css/app.css">
   <link rel="stylesheet" href="/assets/css/site.css">
@@ -14,6 +14,7 @@
   <script defer src="/assets/js/app.js"></script>
   <script defer src="/assets/js/chart.umd.min.js"></script>
   <script defer src="/assets/js/study-data.js"></script>
+  <script defer src="/assets/js/site-copy.js"></script>
   <script defer src="/assets/js/site.js"></script>
 </head>
 <body>
@@ -21,61 +22,55 @@
   <div class="app-shell">
     <aside class="sidebar" id="app-sidebar" data-sidebar>
       <button class="icon-button nav-close" type="button" data-nav-close aria-label="Закрыть меню"><i data-lucide="x" aria-hidden="true"></i></button>
-      <a class="brand" href="/" data-local-link><i data-lucide="timer" aria-hidden="true"></i><span><span data-i18n="brand.title">До дедлайна</span><small>DEADLINE DYNAMICS</small></span></a>
+      <a class="brand" href="/" data-local-link><i data-lucide="timer" aria-hidden="true"></i><span><span data-i18n="brand.title">Deadline Dynamics</span><small data-i18n="brand.course">Student Work Timing &amp; Submission Study</small></span></a>
       <nav class="main-nav" aria-label="Основная навигация">
         <span class="nav-section" data-i18n="nav.research">ИССЛЕДОВАНИЕ</span>
         <a href="/" data-local-link class="active" aria-current="page"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span data-i18n="nav.overview">Обзор</span></a>
         <a href="/data/" data-local-link><i data-lucide="chart-column" aria-hidden="true"></i><span data-i18n="nav.data">Данные</span></a>
         <a href="/simulator/" data-local-link><i data-lucide="flask-conical" aria-hidden="true"></i><span data-i18n="nav.lab">Лаборатория вероятностей</span></a>
-        <a href="/method/" data-local-link><i data-lucide="book-open" aria-hidden="true"></i><span data-i18n="nav.method">Формулы и методы</span></a>
+        <a href="/method/" data-local-link><i data-lucide="book-open" aria-hidden="true"></i><span data-i18n="nav.method">Методика</span></a>
       </nav>
-      <div class="sidebar-note"><span class="tiny-label" data-i18n="brand.course">Теория вероятностей и статистика</span><p data-i18n="nav.tagline">Учебное исследование о сроках выполнения заданий.</p></div>
     </aside>
     <header class="utility-bar">
       <div class="utility-context">
         <button class="icon-button nav-toggle" type="button" data-nav-toggle aria-controls="app-sidebar" aria-expanded="false" aria-label="Открыть меню"><i data-lucide="menu" aria-hidden="true"></i></button>
-        <span class="utility-project">DEADLINE DYNAMICS</span><span class="utility-divider" aria-hidden="true">/</span><span data-i18n="nav.overview">Обзор</span>
+        <span class="utility-project" data-i18n="brand.title">Deadline Dynamics</span><span class="utility-divider" aria-hidden="true">/</span><span data-i18n="nav.overview">Обзор</span>
       </div>
-      <div class="utility-actions">
-        <nav class="language-switcher" aria-label="Язык">
-          <a href="/?lang=kk" data-language="kk" lang="kk" hreflang="kk" title="Қазақша">ҚАЗ</a>
-          <a href="/?lang=ru" data-language="ru" lang="ru" hreflang="ru" title="Русский" aria-current="true">РУС</a>
-          <a href="/?lang=en" data-language="en" lang="en" hreflang="en" title="English">ENG</a>
-        </nav>
-      </div>
+      <div class="utility-actions"><nav class="language-switcher" aria-label="Язык">
+        <a href="/?lang=kk" data-language="kk" lang="kk" hreflang="kk" title="Қазақша">ҚАЗ</a>
+        <a href="/?lang=ru" data-language="ru" lang="ru" hreflang="ru" title="Русский">РУС</a>
+        <a href="/?lang=en" data-language="en" lang="en" hreflang="en" title="English">ENG</a>
+      </nav></div>
     </header>
     <div class="drawer-overlay" data-nav-overlay hidden aria-hidden="true"></div>
     <main id="main" class="main-content static-content" data-workspace data-page="overview">
       <header class="page-heading overview-heading">
         <div>
           <p class="eyebrow" data-i18n="overview.eyebrow">ИССЛЕДОВАНИЕ СТУДЕНЧЕСКИХ ДЕДЛАЙНОВ</p>
-          <h1 data-i18n="brand.title">До дедлайна</h1>
-          <p class="page-subtitle" data-i18n="overview.subtitle">Мы изучаем, связана ли своевременная сдача задания с тем, когда студент начинает над ним работать.</p>
+          <h1 data-i18n="brand.title">Deadline Dynamics</h1>
+          <p class="page-subtitle" data-i18n="overview.subtitle">Student Work Timing &amp; Submission Study</p>
+          <p class="research-question" data-i18n="overview.question">Связано ли время начала работы над заданием с тем, будет ли оно сдано вовремя?</p>
         </div>
-        <a class="button button-secondary survey-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdqIg5NleKUHx8wAzEpLAQ-f8V7Taui6vn56bHmvWKAeX6hYg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer"><i data-lucide="external-link" aria-hidden="true"></i><span data-i18n="overview.survey">Открыть анкету</span></a>
       </header>
 
       <section class="snapshot-strip" aria-label="Контекст выборки" data-i18n-aria="overview.context">
-        <div><span data-i18n="overview.responses">Ответы на анкету</span><strong>52</strong></div>
-        <div><span data-i18n="overview.eligible">Подходящие наблюдения</span><strong>29</strong></div>
-        <div><span data-i18n="overview.known">Известен исход сдачи</span><strong>23</strong></div>
-        <div><span data-i18n="overview.pending">Пока не сдано</span><strong>6</strong></div>
+        <div><span data-i18n="overview.responses">Ответы на анкету</span><strong data-count="sourceResponses">52</strong></div>
+        <div><span data-i18n="overview.eligible">Подходящие наблюдения</span><strong data-count="eligible">29</strong></div>
+        <div><span data-i18n="overview.known">Исход известен</span><strong data-count="known">23</strong></div>
+        <div><span data-i18n="overview.pending">Пока не сдано</span><strong data-count="pending">6</strong></div>
       </section>
 
       <section class="finding-panel" aria-labelledby="finding-title">
         <div class="finding-copy">
-          <p class="eyebrow" data-i18n="overview.findingEyebrow">ОСНОВНОЙ РЕЗУЛЬТАТ ВЫБОРКИ</p>
-          <h2 id="finding-title" data-i18n="overview.findingTitle">Сколько известных исходов завершились сдачей в срок?</h2>
-          <p data-i18n="overview.findingText">В этой выборке 17 из 23 заданий с известным исходом были сданы не позже первоначального дедлайна.</p>
+          <p class="eyebrow" data-i18n="overview.findingEyebrow">ОСНОВНОЙ РЕЗУЛЬТАТ</p>
+          <h2 id="finding-title" data-i18n="overview.findingTitle">Сколько известных исходов завершились сдачей вовремя?</h2>
         </div>
-        <div class="finding-number"><strong id="overallRate">73.9%</strong><span>17 <i aria-hidden="true">/</i> 23</span></div>
-        <p class="finding-note"><span class="status-dot status-amber"></span><span data-i18n="overview.pendingNote">Ещё 6 подходящих ответов относятся к заданиям, которые на момент ответа пока не были сданы; они не входят в знаменатель 23.</span></p>
+        <div class="finding-number"><strong id="overallRate">73.9%</strong><span id="overallFraction">17 / 23 известных исходов</span></div>
       </section>
 
       <section class="panel-section" aria-labelledby="start-chart-title">
         <div class="section-heading">
-          <div><p class="eyebrow" data-i18n="overview.patternEyebrow">ВРЕМЯ НАЧАЛА И ИСХОД</p><h2 id="start-chart-title" data-i18n="overview.patternTitle">Как распределились исходы по времени начала?</h2></div>
-          <span class="muted" data-i18n="overview.knownDenominator">Доля вовремя считается среди известных исходов</span>
+          <div><p class="eyebrow" data-i18n="overview.patternEyebrow">НАЧАЛО РАБОТЫ И ИСХОД</p><h2 id="start-chart-title" data-i18n="overview.patternTitle">Как исход сдачи связан со временем начала?</h2></div>
         </div>
         <div class="view-switcher" role="group" aria-label="Вид диаграммы" data-i18n-aria="view.chartType">
           <button type="button" data-overview-view="percentage" aria-pressed="true" data-i18n="view.percent">Проценты</button>
@@ -83,15 +78,19 @@
           <button type="button" data-overview-view="table" aria-pressed="false" data-i18n="view.table">Таблица</button>
         </div>
         <div class="chart-frame chart-frame-overview"><canvas id="overviewChart" role="img" aria-label="Исход сдачи по времени начала работы"></canvas></div>
-        <p class="chart-description" id="overviewChartText" aria-live="polite"></p>
+        <p class="chart-description sr-only" id="overviewChartText" aria-live="polite"></p>
         <details class="exact-details"><summary data-i18n="data.exact">Точные значения</summary><div id="overviewExact" class="table-scroll" tabindex="0"></div></details>
       </section>
 
-      <section class="closing-row" aria-label="Источник и ограничения" data-i18n-aria="overview.sourceAndLimits">
-        <div class="source-line"><i data-lucide="database" aria-hidden="true"></i><p><strong data-i18n="overview.sourceTitle">Источник данных</strong><span data-i18n="overview.sourceText">Добровольная анкета Google Forms, ответы собраны с 30 сентября по 2 октября 2026 года.</span></p></div>
-        <p class="limitation-line" data-i18n="overview.limit">Выборка добровольная и неслучайная. Наблюдаемая связь не доказывает причинность и не описывает всех студентов.</p>
+      <section class="data-source" aria-labelledby="data-source-title">
+        <div class="data-source-head"><i data-lucide="database" aria-hidden="true"></i><h2 id="data-source-title" data-i18n="overview.sourceTitle">Источник данных</h2></div>
+        <strong class="source-provider" data-i18n="overview.sourceForms">Google Forms</strong>
+        <div class="source-metadata">
+          <span><span data-i18n="overview.sourceResponses">Ответы</span><strong data-count="sourceResponses">52</strong></span>
+          <span><span data-i18n="overview.sourceEligible">Подходящие</span><strong data-count="eligible">29</strong></span>
+          <span id="sourcePeriod" hidden></span>
+        </div>
       </section>
-      <footer class="page-footer"><span data-i18n="footer">Учебный проект по теории вероятностей и статистике</span><a href="/method/" data-local-link data-i18n="footer.method">Как читать методы</a></footer>
     </main>
   </div>
 </body>

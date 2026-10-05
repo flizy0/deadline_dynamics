@@ -16,4 +16,4 @@ Vercel is configured to run `npm run build` and publish `dist/`. No `npm install
 
 The site is a snapshot, not a live Google Forms connection. To publish updated responses, update the aggregate categories in `study-data.js` from a fresh private export, keeping pending and unknown outcomes separate. Never copy a raw response workbook or CSV into `public/` or `dist/`.
 
-The simulator runs in the visitor's browser. Its observed mode uses the snapshot's 17 / 23 known outcomes; pending outcomes are excluded. Manual mode accepts a chosen probability. The Method page is a separate course formula reference and does not use survey values.
+The simulator runs in the visitor's browser. Its observed mode uses the snapshot's 17 / 23 known outcomes; pending outcomes are excluded. Manual mode accepts a chosen probability. The Method page keeps the course formulas separate from the survey calculations; one clearly labelled worked example displays the current aggregate on-time proportion.

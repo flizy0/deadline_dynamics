@@ -222,3 +222,124 @@ body { overflow-x: hidden; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+.brand small {
+  max-width: 17ch;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.static-content .page-heading { min-width: 0; }
+.static-content .page-subtitle { color: var(--text-secondary); font-size: 14px; line-height: 1.45; }
+.research-question { max-width: 70ch; margin: 10px 0 0; color: var(--text); font-size: 16px; line-height: 1.45; }
+.finding-copy h2 { font-size: 17px; }
+.finding-copy p:last-child { font-size: 14px; }
+.finding-number span { font-size: 13px; }
+.data-source { padding: 13px 0 3px; border-top: 1px solid var(--line-strong); }
+.data-source-head { display: flex; align-items: center; gap: 8px; color: var(--teal); }
+.data-source-head .lucide { width: 17px; height: 17px; }
+.data-source-head h2 { margin: 0; color: var(--text); font-size: 13px; font-weight: 620; }
+.source-provider { display: block; margin: 7px 0; color: var(--text-secondary); font-size: 14px; font-weight: 550; }
+.source-metadata { display: flex; flex-wrap: wrap; gap: 7px 18px; color: var(--muted); font-size: 12px; }
+.source-metadata > span { display: inline-flex; gap: 6px; align-items: baseline; }
+.source-metadata strong { color: var(--text-secondary); font-variant-numeric: tabular-nums; font-weight: 560; }
+.source-metadata #sourcePeriod { flex-basis: 100%; }
+.page-footer { justify-content: flex-start; font-size: 11px; }
+
+.data-chapters { display: flex; flex-direction: column; min-width: 0; }
+.data-chapter { min-width: 0; padding: 19px 0 22px; border-top: 1px solid var(--line-strong); scroll-margin-top: 72px; }
+.data-chapter:last-child { border-bottom: 1px solid var(--line-strong); }
+.data-chapter-heading { display: grid; grid-template-columns: 45px minmax(0, 1fr); gap: 12px; align-items: start; margin-bottom: 7px; }
+.data-chapter-number { color: var(--teal); font-size: 22px; font-weight: 560; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.data-chapter-heading .eyebrow { margin: 0 0 4px; font-size: 10px; }
+.data-chapter-heading h2 { margin: 0; font-size: 17px; line-height: 1.25; }
+.data-workspace-section { min-width: 0; padding-top: 10px; }
+.data-workspace-title { margin: 0 0 7px; color: var(--text-secondary); font-size: 13px; font-weight: 600; }
+.local-view-switcher { justify-content: flex-start; gap: 5px; margin: 0 0 6px; }
+.local-view-switcher button { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-height: 38px; min-width: 82px; padding: 5px 10px; }
+.local-view-switcher .recommended { color: var(--muted); font-size: 9.5px; font-weight: 450; line-height: 1.1; }
+.local-view-switcher button[aria-pressed="true"] .recommended { color: var(--teal); }
+.data-chart-frame { min-height: 245px; margin: 5px 0; }
+.data-comparison-heading { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); }
+.data-comparison-heading h3 { margin: 0; color: var(--text); font-size: 14px; font-weight: 620; }
+.data-workspace-section .exact-details { margin-top: 5px; }
+.data-workspace-section .exact-details summary { font-size: 12px; }
+
+.method-page { gap: 17px; }
+.timeline-section { padding: 0 0 17px; border-bottom: 1px solid var(--line-strong); }
+.timeline-section > h2 { margin: 0 0 12px; font-size: 15px; }
+.research-timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; margin: 0; padding: 0; list-style: none; }
+.research-timeline li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 8px; align-content: start; min-width: 0; padding: 2px 11px; border-left: 1px solid var(--line); }
+.research-timeline li:first-child { padding-left: 0; border-left: 0; }
+.timeline-number { color: var(--teal); font-size: 11px; font-variant-numeric: tabular-nums; }
+.research-timeline h3 { margin: 0 0 4px; color: var(--text); font-size: 11px; font-weight: 640; line-height: 1.3; }
+.research-timeline p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.4; }
+.method-index { padding-bottom: 12px; }
+.method-index a { font-size: 10px; }
+.formula-section { padding: 13px 0 19px; }
+.formula-section-heading { grid-template-columns: 37px minmax(0, 1fr); margin-bottom: 12px; }
+.formula-section-heading h2 { font-size: 14px; font-weight: 650; }
+.formula-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.formula-grid-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.formula-grid-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.formula-card { padding: 11px 12px; }
+.formula-card h3 { min-height: 2.4em; margin-bottom: 8px; color: var(--text); font-size: 13px; line-height: 1.3; }
+.formula-label { display: block; margin-bottom: 2px; color: var(--muted); font-size: 10px; font-weight: 620; text-transform: uppercase; }
+.formula-equation { min-height: 46px; margin-bottom: 9px; color: var(--blue); font-size: 20px; line-height: 1.45; }
+.formula-sum { white-space: nowrap; }
+.used-for { padding-top: 7px; border-top: 1px solid var(--line); }
+.used-for strong { color: var(--text-secondary); font-size: 11px; font-weight: 620; }
+.used-for p { margin: 4px 0 0; color: var(--text-secondary); font-size: 14px; line-height: 1.45; }
+.formula-footnote { margin-top: 11px; color: var(--text-secondary); font-size: 14px; }
+.worked-example { padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-panel); background: var(--surface); }
+.worked-example .section-heading { margin-bottom: 12px; }
+.worked-example .section-heading h2 { font-size: 16px; }
+.worked-counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--surface-inset); }
+.worked-counts > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 10px 12px; }
+.worked-counts > div + div { border-left: 1px solid var(--line); }
+.worked-counts span { color: var(--text-secondary); font-size: 13px; }
+.worked-counts strong { color: var(--teal); font-size: 22px; font-variant-numeric: tabular-nums; font-weight: 560; }
+.worked-equations { display: flex; flex-wrap: wrap; gap: 6px 24px; margin-top: 11px; }
+.worked-equations p { margin: 0; color: var(--text); font-size: 19px; font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; }
+.worked-equations strong { color: var(--teal); font-weight: 650; }
+.method-limitations { padding: 12px 0 0; border-top: 1px solid var(--line-strong); }
+.method-limitations h2 { margin: 0 0 7px; font-size: 14px; }
+.method-limitations ul { display: grid; gap: 5px; margin: 0; padding-left: 20px; }
+.method-limitations li { color: var(--text-secondary); font-size: 14px; line-height: 1.45; }
+
+.model-explainer > p { font-size: 14px; line-height: 1.5; }
+.observed-origin { color: var(--text-secondary); font-size: 14px; line-height: 1.45; }
+.simulation-story h3 { font-size: 13px; }
+.simulation-story p { color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+.single-group-panel .section-heading p { font-size: 14px; }
+
+@media (max-width: 767px) {
+  .research-question { font-size: 15px; }
+  .data-chapter { padding: 16px 0 19px; }
+  .data-chapter-heading { grid-template-columns: 36px minmax(0, 1fr); gap: 8px; }
+  .data-chapter-number { font-size: 20px; }
+  .data-chapter-heading h2 { font-size: 16px; }
+  .local-view-switcher button { min-height: 42px; }
+  .data-chart-frame { min-height: 235px; }
+  .research-timeline { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .research-timeline li, .research-timeline li:first-child { grid-template-columns: 30px minmax(0, 1fr); padding: 10px 0; border-left: 0; border-top: 1px solid var(--line); }
+  .research-timeline li:first-child { border-top: 0; }
+  .research-timeline p { font-size: 14px; }
+  .formula-grid, .formula-grid-four, .formula-grid-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 479px) {
+  .brand small { max-width: 20ch; }
+  .source-metadata { gap: 7px 12px; }
+  .source-metadata #sourcePeriod { margin-top: 1px; }
+  .data-chapter-heading { grid-template-columns: 30px minmax(0, 1fr); }
+  .local-view-switcher { gap: 3px; }
+  .local-view-switcher button { flex: 1 1 calc(33.333% - 3px); min-width: 0; padding: 5px 6px; font-size: 10.5px; }
+  .formula-grid, .formula-grid-four, .formula-grid-two { grid-template-columns: minmax(0, 1fr); }
+  .formula-card h3 { min-height: 0; }
+  .worked-example { padding: 11px; }
+  .worked-counts > div { padding: 9px 8px; }
+  .worked-counts span { font-size: 12px; }
+  .worked-counts strong { font-size: 20px; }
+  .worked-equations { gap: 5px 15px; }
+  .worked-equations p { font-size: 17px; }
+}

@@ -1,8 +1,33 @@
+# Java / Maven
 target/
+app.jar
+
+# Local database and runtime state
 .runtime/
 local.env
+
+# Local environment files (keep the safe template)
 .env
-*.log
+.env.*
+!.env.example
+
+# Static build and deployment output
+dist/
+node_modules/
+.vercel/
+
+# IDE and operating-system files
 .idea/
 *.iml
-app.jar
+.DS_Store
+Thumbs.db
+desktop.ini
+__MACOSX/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+/previews/product-regression-failure.*

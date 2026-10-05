@@ -29,9 +29,11 @@ for (const variable of data.variables) {
 }
 
 const siteSource = await readFile(path.join(publicDir, "assets", "js", "site.js"), "utf8");
+const siteCopySource = await readFile(path.join(publicDir, "assets", "js", "site-copy.js"), "utf8");
 const dictionaryBoundary = siteSource.indexOf("  const langParam =");
 if (dictionaryBoundary < 0) throw new Error("Could not locate the localization dictionaries.");
 const dictionarySandbox = { window: {} };
+vm.runInNewContext(siteCopySource, dictionarySandbox, { timeout: 1000 });
 vm.runInNewContext(`${siteSource.slice(0, dictionaryBoundary)}\nwindow.__translations = copy;\n})();`, dictionarySandbox, { timeout: 1000 });
 const translations = dictionarySandbox.window.__translations;
 const publicHtml = await Promise.all(requiredPages.map(relative => readFile(path.join(publicDir, relative), "utf8")));
@@ -39,8 +41,23 @@ const htmlKeys = publicHtml.flatMap(html => [...html.matchAll(/data-i18n(?:-aria
 const literalScriptKeys = [...siteSource.matchAll(/\bt\(["']([^"']+)["']\)/g)].map(match => match[1]);
 const categoryKeys = data.variables.flatMap(variable => variable.categories.map(category => `cat.${category.code}`));
 const variableKeys = data.variables.map(variable => `data.variable.${variable.key}`);
+const dynamicKeys = ["view.simpleBar", "view.line", "view.pie", "view.percentageBar", "view.multipleBar", "view.table", "data.recommended"];
+const methodHtml = publicHtml[3];
+if ((methodHtml.match(/class="formula-card"/g) || []).length !== 17) throw new Error("The method page must contain all 17 formula cards.");
+if ((methodHtml.match(/class="timeline-number"/g) || []).length !== 5) throw new Error("The research timeline must contain five steps.");
+if ((methodHtml.match(/data-i18n="method\.example\.limitations\.(?:one|two|three)"/g) || []).length !== 3) throw new Error("The method page must show exactly three limitations.");
+if (/<select\b/.test(publicHtml[1]) || !publicHtml[1].includes('id="dataChapters"')) throw new Error("The data page must use independent, local chart controls.");
 for (const locale of ["ru", "kk", "en"]) {
-  const missing = [...new Set([...htmlKeys, ...literalScriptKeys, ...categoryKeys, ...variableKeys])].filter(key => !translations[locale][key]);
+  if (translations[locale]["brand.title"] !== "Deadline Dynamics" || translations[locale]["brand.course"] !== "Student Work Timing & Submission Study") {
+    throw new Error(`The public brand strings must remain fixed in ${locale}.`);
+  }
+}
+const expectedOrder = ["allotted", "start", "outcome", "extension", "planning", "difficulty", "otherDeadlines"];
+if (data.variables.map(variable => variable.key).filter(key => expectedOrder.includes(key)).sort((a, b) => expectedOrder.indexOf(a) - expectedOrder.indexOf(b)).join(",") !== expectedOrder.join(",")) {
+  throw new Error("The aggregate data is missing a required variable for the data page.");
+}
+for (const locale of ["ru", "kk", "en"]) {
+  const missing = [...new Set([...htmlKeys, ...literalScriptKeys, ...categoryKeys, ...variableKeys, ...dynamicKeys])].filter(key => !translations[locale][key]);
   if (missing.length) throw new Error(`Missing ${locale} translations: ${missing.join(", ")}`);
 }
 

@@ -45,6 +45,9 @@
     "brand.title":"Deadline Dynamics", "overview.context":"Sample context", "overview.sourceAndLimits":"Data source and limitations", "view.chartType":"Chart view", "data.context":"Data context", "method.index":"Reference sections", "lab.decrease":"Decrease", "lab.increase":"Increase"
   });
 
+  const externalCopy = window.DEADLINE_COPY_OVERRIDES || {};
+  ["ru", "kk", "en"].forEach(locale => Object.assign(copy[locale], externalCopy[locale] || {}));
+
   const langParam = new URLSearchParams(window.location.search).get("lang");
   let language = ["ru", "kk", "en"].includes(langParam) ? langParam : localStorage.getItem("deadline-language") || "ru";
   localStorage.setItem("deadline-language", language);
@@ -191,6 +194,19 @@
 
   function initOverview() {
     if (!document.getElementById("overviewChart")) return;
+    document.querySelectorAll("[data-count]").forEach(element => {
+      const value = study[element.dataset.count];
+      if (Number.isFinite(value)) element.textContent = formatNumber(value);
+    });
+    document.getElementById("overallRate").textContent = formatPercent(100 * study.onTime / study.known);
+    document.getElementById("overallFraction").textContent = interpolate(t("overview.knownFraction"), {
+      onTime: formatNumber(study.onTime), known: formatNumber(study.known)
+    });
+    const sourcePeriod = document.getElementById("sourcePeriod");
+    if (sourcePeriod && study.collectedFrom && study.collectedTo) {
+      sourcePeriod.hidden = false;
+      sourcePeriod.textContent = interpolate(t("overview.sourcePeriod"), { from: study.collectedFrom, to: study.collectedTo });
+    }
     document.querySelectorAll("[data-overview-view]").forEach(button => button.addEventListener("click", () => {
       document.querySelectorAll("[data-overview-view]").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
       updateOverview();
@@ -199,72 +215,200 @@
   }
 
   function initData() {
-    const variableSelect = document.getElementById("variableSelect");
-    if (!variableSelect) return;
-    const relationshipSelect = document.getElementById("relationshipSelect");
-    study.variables.forEach(variable => variableSelect.add(new Option(t(`data.variable.${variable.key}`), variable.key)));
-    study.variables.filter(variable => variable.key !== "outcome").forEach(variable => relationshipSelect.add(new Option(t(`data.variable.${variable.key}`), variable.key)));
-    variableSelect.value = "start";
-    relationshipSelect.value = "start";
-    let distributionChart = null;
-    let relationshipChart = null;
-    let distributionView = "count";
-    let relationshipView = "percent";
+    const host = document.getElementById("dataChapters");
+    if (!host) return;
+    const order = ["allotted", "start", "outcome", "extension", "planning", "difficulty", "otherDeadlines"];
+    const distributionViews = {
+      allotted: ["simpleBar", "line", "table"], start: ["simpleBar", "line", "table"],
+      outcome: ["pie", "simpleBar", "table"], extension: ["pie", "simpleBar", "table"],
+      planning: ["simpleBar", "pie", "table"], difficulty: ["line", "simpleBar", "table"],
+      otherDeadlines: ["simpleBar", "line", "table"]
+    };
+    const comparisons = new Set(["allotted", "start", "planning", "difficulty", "otherDeadlines"]);
+    const variables = order.map(key => study.variables.find(item => item.key === key)).filter(Boolean);
+    const colorFor = code => ({
+      onTime: palette.teal, late: palette.coral, pending: palette.amber,
+      yes: palette.blue, no: palette.teal, unknown: palette.muted,
+      veryEasy: palette.sage, ratherEasy: palette.teal, moderate: palette.blue,
+      ratherDifficult: palette.amber, veryDifficult: palette.coral
+    })[code] || palette.teal;
 
-    const renderDistribution = () => {
-      const variable = study.variables.find(item => item.key === variableSelect.value);
+    function element(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function addViewButtons(container, views, recommended, ariaLabel) {
+      const group = element("div", "view-switcher local-view-switcher");
+      group.setAttribute("role", "group");
+      group.setAttribute("aria-label", ariaLabel);
+      views.forEach(view => {
+        const button = element("button", "", t(`view.${view}`));
+        button.type = "button";
+        button.dataset.view = view;
+        button.setAttribute("aria-pressed", String(view === recommended));
+        if (view === recommended) button.append(element("small", "recommended", t("data.recommended")));
+        group.append(button);
+      });
+      container.append(group);
+      return group;
+    }
+
+    function addWorkspace(parent, options) {
+      const workspace = element("section", "data-workspace-section");
+      const heading = element("h3", "data-workspace-title", options.title);
+      workspace.append(heading);
+      const controls = addViewButtons(workspace, options.views, options.defaultView, options.ariaLabel);
+      const frame = element("div", "chart-frame data-chart-frame");
+      frame.style.height = `${Math.min(390, Math.max(250, options.variable.categories.length * 33 + 65))}px`;
+      const canvas = element("canvas", "");
+      canvas.id = options.id;
+      canvas.setAttribute("role", "img");
+      canvas.setAttribute("aria-label", options.title);
+      frame.append(canvas);
+      workspace.append(frame);
+      const text = element("p", "sr-only");
+      text.setAttribute("aria-live", "polite");
+      workspace.append(text);
+      const details = document.createElement("details");
+      details.className = "exact-details";
+      const summary = element("summary", "", t("data.exact"));
+      const table = element("div", "table-scroll");
+      table.tabIndex = 0;
+      details.append(summary, table);
+      workspace.append(details);
+      parent.append(workspace);
+      return { workspace, controls, frame, canvas, text, details, table, chart: null, activeView: options.defaultView, variable: options.variable, kind: options.kind };
+    }
+
+    function updatePressed(state) {
+      state.controls.querySelectorAll("button").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.view === state.activeView)));
+      state.frame.hidden = state.activeView === "table";
+      state.details.open = state.activeView === "table";
+      state.chart = destroyChart(state.chart);
+    }
+
+    function renderDistribution(state) {
+      const variable = state.variable;
       const labels = variable.categories.map(item => getCategory(item.code));
-      const values = variable.categories.map(item => distributionView === "percent" ? 100 * item.count / study.eligible : item.count);
-      const tableRows = variable.categories.map((item, i) => [labels[i], item.count, formatPercent(100 * item.count / study.eligible)]);
-      makeTable(document.getElementById("distributionExact"), [t("common.category"), t("data.total"), t("data.share")], tableRows, t(`data.variable.${variable.key}`));
-      document.getElementById("distributionChartText").textContent = `${t(`data.variable.${variable.key}`)}. ${variable.categories.map((item, i) => `${labels[i]}: ${item.count} (${formatPercent(100 * item.count / study.eligible)})`).join("; ")}.`;
-      document.getElementById("distributionChart").closest(".chart-frame").hidden = distributionView === "table";
-      document.getElementById("distributionExact").parentElement.open = distributionView === "table";
-      distributionChart = destroyChart(distributionChart);
-      if (distributionView === "table") return;
-      distributionChart = new Chart(document.getElementById("distributionChart"), {
-        type: "bar", data: { labels, datasets: [{ label: distributionView === "percent" ? t("view.percent") : t("view.count"), data: values, backgroundColor: variable.key === "outcome" ? [palette.teal, palette.coral, palette.amber] : "rgba(73,191,174,.78)", borderColor: variable.key === "outcome" ? [palette.teal, palette.coral, palette.amber] : palette.teal, borderWidth: 1, borderRadius: 2 }] },
-        options: { ...horizontalOptions(distributionView === "percent" ? t("view.axisPercent") : t("view.axisCount"), distributionView === "percent" ? 100 : undefined), plugins: { ...horizontalOptions("", undefined).plugins, legend: { display: false }, tooltip: { ...horizontalOptions("", undefined).plugins.tooltip, callbacks: { label: context => distributionView === "percent" ? formatPercent(context.raw) : formatNumber(context.raw) } } } }
+      const counts = variable.categories.map(item => item.count);
+      const rows = variable.categories.map((item, i) => [labels[i], item.count, formatPercent(100 * item.count / study.eligible)]);
+      makeTable(state.table, [t("common.category"), t("data.total"), t("data.share")], rows, t(`data.variable.${variable.key}`));
+      state.text.textContent = variable.categories.map((item, i) => `${labels[i]}: ${formatNumber(item.count)} (${formatPercent(100 * item.count / study.eligible)})`).join("; ");
+      state.canvas.setAttribute("aria-label", t(`data.variable.${variable.key}`));
+      updatePressed(state);
+      if (state.activeView === "table" || !window.Chart) return;
+      const paletteColors = variable.categories.map(item => colorFor(item.code));
+      if (state.activeView === "pie") {
+        state.chart = new Chart(state.canvas, {
+          type: "pie", data: { labels, datasets: [{ data: counts, backgroundColor: paletteColors, borderColor: "#0f1211", borderWidth: 2 }] },
+          options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: {
+            legend: { position: "bottom", labels: { color: palette.muted, boxWidth: 9, usePointStyle: true, pointStyle: "circle", padding: 12 } },
+            tooltip: { backgroundColor: "#121615", borderColor: "rgba(255,255,255,.14)", borderWidth: 1, titleColor: "#e8ece9", bodyColor: "#c0c7c3", padding: 10, callbacks: { label: context => `${formatNumber(context.raw)} (${formatPercent(100 * context.raw / study.eligible)})` } }
+          } }
+        });
+        return;
+      }
+      if (state.activeView === "line") {
+        const options = commonChartOptions(t("data.axisCount"), undefined);
+        options.scales.x.ticks.maxRotation = 40;
+        options.scales.x.ticks.minRotation = 0;
+        options.scales.x.ticks.autoSkip = true;
+        options.plugins.legend.display = false;
+        state.chart = new Chart(state.canvas, { type: "line", data: { labels, datasets: [{ label: t("data.responses"), data: counts, borderColor: palette.teal, backgroundColor: "rgba(73,191,174,.08)", borderWidth: 2, pointRadius: 3, pointHoverRadius: 5, tension: 0 }] }, options });
+        return;
+      }
+      state.chart = new Chart(state.canvas, {
+        type: "bar", data: { labels, datasets: [{ label: t("data.responses"), data: counts, backgroundColor: variable.key === "outcome" || variable.key === "extension" ? paletteColors : "rgba(73,191,174,.78)", borderColor: variable.key === "outcome" || variable.key === "extension" ? paletteColors : palette.teal, borderWidth: 1, borderRadius: 2 }] },
+        options: { ...horizontalOptions(t("data.axisCount"), undefined), plugins: { ...horizontalOptions("", undefined).plugins, legend: { display: false }, tooltip: { ...horizontalOptions("", undefined).plugins.tooltip, callbacks: { label: context => `${formatNumber(context.raw)} (${formatPercent(100 * context.raw / study.eligible)})` } } } }
       });
-    };
+    }
 
-    const renderRelationship = () => {
-      const variable = study.variables.find(item => item.key === relationshipSelect.value);
+    function renderComparison(state) {
+      const variable = state.variable;
       const known = variable.categories.map(item => item.onTime + item.late);
-      const categoryLabels = variable.categories.map(item => getCategory(item.code));
-      const labels = categoryLabels.map((label, i) => `${label} (${t("common.n")}=${known[i]})`);
-      const onTime = variable.categories.map((item, i) => relationshipView === "percent" ? (known[i] ? 100 * item.onTime / known[i] : 0) : item.onTime);
-      const late = variable.categories.map((item, i) => relationshipView === "percent" ? (known[i] ? 100 * item.late / known[i] : 0) : item.late);
-      const rows = variable.categories.map((item, i) => [getCategory(item.code), item.count, known[i], item.onTime, item.late, item.pending, known[i] ? formatPercent(100 * item.onTime / known[i]) : t("common.noData")]);
-      makeTable(document.getElementById("relationshipExact"), [t("common.category"), t("data.total"), t("data.knownN"), t("common.onTime"), t("common.late"), t("common.pending"), t("data.onTimePercent")], rows, t(`data.variable.${variable.key}`));
-      document.getElementById("relationshipChartText").textContent = `${t("data.relationshipAccessible")} ${variable.categories.map((item, i) => `${categoryLabels[i]} (${t("common.n")}=${known[i]}): ${item.onTime}/${known[i]} ${t("common.onTime").toLowerCase()}`).join("; ")}.`;
-      document.getElementById("relationshipChart").closest(".chart-frame").hidden = relationshipView === "table";
-      document.getElementById("relationshipExact").parentElement.open = relationshipView === "table";
-      relationshipChart = destroyChart(relationshipChart);
-      if (relationshipView === "table") return;
-      const max = relationshipView === "percent" ? 100 : Math.max(1, ...known);
-      relationshipChart = new Chart(document.getElementById("relationshipChart"), {
-        type: "bar", data: { labels, datasets: [
-          { label: t("view.ontime"), data: onTime, backgroundColor: "rgba(73,191,174,.82)", borderColor: palette.teal, borderWidth: 1, borderRadius: 2 },
-          { label: t("view.late"), data: late, backgroundColor: "rgba(200,118,111,.76)", borderColor: palette.coral, borderWidth: 1, borderRadius: 2 }
-        ] }, options: { ...horizontalOptions(relationshipView === "percent" ? t("view.axisPercent") : t("view.axisCount"), max), scales: { ...horizontalOptions("", max).scales, y: { ...horizontalOptions("", max).scales.y, stacked: true }, x: { ...horizontalOptions("", max).scales.x, stacked: true } }, plugins: { ...horizontalOptions("", max).plugins, tooltip: { ...horizontalOptions("", max).plugins.tooltip, callbacks: { afterTitle: items => `${t("data.knownN")}: ${known[items[0].dataIndex]}` } } } }
+      const categoryLabels = variable.categories.map((item, i) => `${getCategory(item.code)} (${t("common.n")}=${known[i]})`);
+      const rows = variable.categories.map((item, i) => [getCategory(item.code), known[i], item.onTime, item.late, item.pending]);
+      makeTable(state.table, [t("common.category"), t("data.knownN"), t("common.onTime"), t("common.late"), t("common.pending")], rows, `${t("data.outcomeComparison")}: ${t(`data.variable.${variable.key}`)}`);
+      state.text.textContent = variable.categories.map((item, i) => known[i]
+        ? `${getCategory(item.code)}: n=${known[i]}, ${t("common.onTime")} ${item.onTime} (${formatPercent(100 * item.onTime / known[i])}), ${t("common.late")} ${item.late} (${formatPercent(100 * item.late / known[i])})`
+        : `${getCategory(item.code)}: ${t("data.knownN")} = 0`).join("; ");
+      state.canvas.setAttribute("aria-label", `${t("data.outcomeComparison")}: ${t(`data.variable.${variable.key}`)}`);
+      updatePressed(state);
+      if (state.activeView === "table" || !window.Chart) return;
+      const percentage = state.activeView === "percentageBar";
+      const max = percentage ? 100 : Math.max(1, ...known);
+      const options = horizontalOptions(percentage ? t("data.axisShare") : t("data.axisCount"), max);
+      options.scales.x.stacked = percentage;
+      options.scales.y.stacked = percentage;
+      options.scales.x.ticks.callback = value => percentage ? `${value}%` : formatNumber(value);
+      state.chart = new Chart(state.canvas, {
+        type: "bar", data: { labels: categoryLabels, datasets: [
+          { label: t("common.onTime"), data: variable.categories.map((item, i) => known[i] && percentage ? 100 * item.onTime / known[i] : item.onTime), backgroundColor: "rgba(73,191,174,.84)", borderColor: palette.teal, borderWidth: 1, borderRadius: 2 },
+          { label: t("common.late"), data: variable.categories.map((item, i) => known[i] && percentage ? 100 * item.late / known[i] : item.late), backgroundColor: "rgba(200,118,111,.8)", borderColor: palette.coral, borderWidth: 1, borderRadius: 2 }
+        ] }, options: { ...options, plugins: { ...options.plugins, tooltip: { ...options.plugins.tooltip, callbacks: { label: context => percentage ? `${context.dataset.label}: ${formatPercent(context.raw)}` : `${context.dataset.label}: ${formatNumber(context.raw)}`, afterTitle: items => `${t("data.knownN")}: ${known[items[0].dataIndex]}` } } } }
       });
-    };
+    }
 
-    variableSelect.addEventListener("change", renderDistribution);
-    relationshipSelect.addEventListener("change", renderRelationship);
-    document.querySelectorAll("[data-distribution-view]").forEach(button => button.addEventListener("click", () => {
-      distributionView = button.dataset.distributionView;
-      document.querySelectorAll("[data-distribution-view]").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
-      renderDistribution();
-    }));
-    document.querySelectorAll("[data-relationship-view]").forEach(button => button.addEventListener("click", () => {
-      relationshipView = button.dataset.relationshipView;
-      document.querySelectorAll("[data-relationship-view]").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
-      renderRelationship();
-    }));
-    renderDistribution();
-    renderRelationship();
+    variables.forEach((variable, index) => {
+      const chapter = element("section", "data-chapter");
+      chapter.id = `data-${variable.key}`;
+      chapter.setAttribute("aria-labelledby", `data-title-${variable.key}`);
+      const heading = element("header", "data-chapter-heading");
+      heading.append(element("span", "data-chapter-number", String(index + 1).padStart(2, "0")));
+      const headingText = element("div", "");
+      headingText.append(element("p", "eyebrow", t("data.eyebrow")));
+      const title = element("h2", "", t(`data.variable.${variable.key}`));
+      title.id = `data-title-${variable.key}`;
+      headingText.append(title);
+      heading.append(headingText);
+      chapter.append(heading);
+      const distribution = addWorkspace(chapter, {
+        id: `distribution-${variable.key}`, title: t("data.responses"), variable, kind: "distribution",
+        views: distributionViews[variable.key], defaultView: distributionViews[variable.key][0],
+        ariaLabel: t("data.distributionViews")
+      });
+      distribution.controls.addEventListener("click", event => {
+        const button = event.target.closest("button[data-view]");
+        if (!button) return;
+        distribution.activeView = button.dataset.view;
+        renderDistribution(distribution);
+      });
+      host.append(chapter);
+      renderDistribution(distribution);
+      if (comparisons.has(variable.key)) {
+        const comparisonHeading = element("div", "data-comparison-heading");
+        comparisonHeading.append(element("h3", "", t("data.outcomeComparison")));
+        chapter.append(comparisonHeading);
+        const comparison = addWorkspace(chapter, {
+          id: `comparison-${variable.key}`, title: t("data.outcomeComparison"), variable, kind: "comparison",
+          views: ["percentageBar", "multipleBar", "table"], defaultView: "percentageBar",
+          ariaLabel: t("data.comparisonViews")
+        });
+        comparison.controls.addEventListener("click", event => {
+          const button = event.target.closest("button[data-view]");
+          if (!button) return;
+          comparison.activeView = button.dataset.view;
+          renderComparison(comparison);
+        });
+        renderComparison(comparison);
+      }
+    });
+  }
+
+  function initMethodExample() {
+    const onTime = document.getElementById("exampleOnTime");
+    if (!onTime) return;
+    const known = study.onTime + study.late;
+    const decimal = known ? (study.onTime / known).toFixed(3) : t("common.noData");
+    const percent = known ? formatPercent(100 * study.onTime / known) : t("common.noData");
+    ["exampleOnTime", "exampleOnTimeEquation"].forEach(id => { document.getElementById(id).textContent = formatNumber(study.onTime); });
+    ["exampleLate"].forEach(id => { document.getElementById(id).textContent = formatNumber(study.late); });
+    ["exampleKnown", "exampleKnownEquation"].forEach(id => { document.getElementById(id).textContent = formatNumber(known); });
+    document.getElementById("exampleDecimal").textContent = decimal;
+    document.getElementById("examplePercent").textContent = percent;
   }
 
   function randomSeed() {
@@ -299,7 +443,8 @@
     function updateControls() {
       const isManual = mode.value === "manual";
       document.getElementById("manualProbabilityWrap").hidden = !isManual;
-      document.getElementById("observedOrigin").textContent = t(isManual ? "lab.manualOrigin" : "lab.observedOrigin");
+      const origin = document.getElementById("observedOrigin");
+      if (origin) origin.textContent = isManual ? t("lab.manualOrigin") : interpolate(t("lab.observedOrigin"), { onTime: study.onTime, known: study.known });
       document.getElementById("probabilityOutput").textContent = `${slider.value}%`;
       const n = Number(sizeInput.value);
       thresholdInput.max = String(Number.isInteger(n) && n >= 1 && n <= 100 ? n : 100);
@@ -426,5 +571,6 @@
 
   initOverview();
   initData();
+  initMethodExample();
   initSimulator();
 })();
