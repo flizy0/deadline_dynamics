@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{report.title})}"></head>
+<body>
+<a class="skip-link" href="#main" th:text="#{common.skip}"></a>
+<div class="app-shell">
+    <aside th:replace="~{fragments :: sidebar}"></aside>
+    <th:block th:replace="~{fragments :: utilityBar(#{nav.frequencies})}"></th:block>
+    <main id="main" class="main-content report-content" data-workspace>
+        <header class="page-heading">
+            <div>
+                <p class="eyebrow" th:text="#{report.eyebrow}"></p>
+                <h1 th:text="#{report.title}"></h1>
+                <p class="page-subtitle" th:text="#{report.intro}"></p>
+            </div>
+        </header>
+        <dl class="report-scope">
+            <div><dt th:text="#{report.sourceResponses}"></dt><dd th:text="${allCount}"></dd></div>
+            <div><dt th:text="#{report.assignments}"></dt><dd th:text="${summary.total()}"></dd></div>
+            <div><dt th:text="#{report.knownOutcomes}"></dt><dd th:text="${summary.known()}"></dd></div>
+        </dl>
+
+        <section class="report-chapter" th:each="section, chapter : ${sections}" th:id="${'chapter-' + section.field()}" th:attr="aria-labelledby=${'chapter-title-' + section.field()}">
+            <header class="report-chapter-heading">
+                <span class="report-chapter-number" aria-hidden="true" th:text="${#numbers.formatInteger(chapter.count, 2)}"></span>
+                <div>
+                    <h2 th:id="${'chapter-title-' + section.field()}" th:text="${#messages.msg('report.variable.' + section.field())}"></h2>
+                    <p th:text="${#messages.msg('report.description.' + section.field())}"></p>
+                </div>
+            </header>
+
+            <article class="report-workspace" data-report-workspace th:id="${'distribution-' + section.field()}">
+                <div class="report-workspace-heading">
+                    <h3 th:text="#{report.distribution}"></h3>
+                    <span class="report-sample" th:text="#{report.sample(${section.frequency().total()})}"></span>
+                </div>
+                <div class="report-view-selector" role="group" th:attr="aria-label=#{report.distributionView}">
+                    <button type="button" th:each="view : ${section.views()}" th:attr="data-report-view=${view},aria-pressed=${view == section.view()}" th:text="${#messages.msg('report.view.' + view)}"></button>
+                </div>
+                <div class="report-chart">
+                    <canvas role="img" th:attr="aria-label=${#messages.msg('report.distributionOf', #messages.msg('report.variable.' + section.field()))},aria-describedby=${'distribution-exact-' + section.field()}"></canvas>
+                </div>
+                <details class="report-exact" th:id="${'distribution-exact-' + section.field()}" th:open="${section.view() == 'table'}">
+                    <summary th:text="#{report.exact}"></summary>
+                    <div class="table-scroll">
+                        <table>
+                            <caption class="sr-only" th:text="${#messages.msg('report.distributionOf', #messages.msg('report.variable.' + section.field()))}"></caption>
+                            <thead><tr><th scope="col" th:text="#{report.category}"></th><th scope="col" th:text="#{report.count}"></th><th scope="col" th:text="#{report.percent}"></th></tr></thead>
+                            <tbody><tr th:each="row : ${section.frequency().rows()}"><th scope="row" th:text="${#messages.msg('option.' + section.field() + '.' + row.code())}"></th><td th:text="${row.count()}"></td><td th:text="${#numbers.formatDecimal(row.percent(),1,1) + '%'}"></td></tr></tbody>
+                            <tfoot><tr><th scope="row" th:text="#{report.total}"></th><td th:text="${section.frequency().total()}"></td><td th:text="${section.frequency().total() > 0 ? '100%' : #messages.msg('report.noData')}"></td></tr></tfoot>
+                        </table>
+                    </div>
+                </details>
+                <p class="report-observation" th:if="${!section.frequency().modeCodes().isEmpty()}">
+                    <span th:text="#{report.mode}"></span>
+                    <strong th:each="code, status : ${section.frequency().modeCodes()}" th:text="${#messages.msg('option.' + section.field() + '.' + code) + (status.last ? '' : '; ')}"></strong>
+                    <span class="report-observation-count" th:text="#{report.modeCount(${section.frequency().modeCount()})}"></span>
+                </p>
+                <script type="application/json" data-report-payload th:attr="data-report-target=${'distribution-' + section.field()}" th:inline="javascript">
+                {"field": /*[[${section.field()}]]*/ "", "kind": "distribution", "labels": /*[[${section.frequency().rows().![#messages.msg('option.' + #vars.section.field() + '.' + code())]}]]*/ [], "rows": /*[[${section.frequency().rows()}]]*/ [], "outcomes": /*[[${section.outcomes()}]]*/ [], "views": /*[[${section.views()}]]*/ [], "defaultView": /*[[${section.view()}]]*/ "bars", "text": {"count": /*[[#{report.count}]]*/ "", "percent": /*[[#{report.percent}]]*/ "", "onTime": /*[[#{report.onTime}]]*/ "", "late": /*[[#{report.late}]]*/ "", "known": /*[[#{report.known}]]*/ "", "category": /*[[#{report.category}]]*/ "", "noData": /*[[#{report.noData}]]*/ "", "pending": /*[[#{report.pending}]]*/ "", "unknown": /*[[#{report.unknown}]]*/ "", "total": /*[[#{report.total}]]*/ "", "special": /*[[#{report.special}]]*/ ""}}
+                </script>
+            </article>
+
+            <article class="report-workspace report-relationship" data-report-workspace th:if="${section.field() != 'submissionStatus'}" th:id="${'relationship-' + section.field()}">
+                <div class="report-workspace-heading">
+                    <h3 th:text="#{report.relationship}"></h3>
+                    <span class="report-sample" th:text="#{report.knownSample(${summary.known()})}"></span>
+                </div>
+                <div class="report-view-selector" role="group" th:attr="aria-label=#{report.relationshipView}">
+                    <button type="button" data-report-view="percentage" aria-pressed="true" th:text="#{report.view.percentage}"></button>
+                    <button type="button" data-report-view="multiple" aria-pressed="false" th:text="#{report.view.multiple}"></button>
+                    <button type="button" data-report-view="table" aria-pressed="false" th:text="#{report.view.table}"></button>
+                </div>
+                <div class="report-chart">
+                    <canvas role="img" th:attr="aria-label=${#messages.msg('report.relationshipOf', #messages.msg('report.variable.' + section.field()))},aria-describedby=${'relationship-exact-' + section.field()}"></canvas>
+                </div>
+                <details class="report-exact" th:id="${'relationship-exact-' + section.field()}">
+                    <summary th:text="#{report.exact}"></summary>
+                    <div class="table-scroll">
+                        <table>
+                            <caption class="sr-only" th:text="${#messages.msg('report.relationshipOf', #messages.msg('report.variable.' + section.field()))}"></caption>
+                            <thead><tr><th scope="col" th:text="#{report.category}"></th><th scope="col" th:text="#{report.count}"></th><th scope="col" th:text="#{report.known}"></th><th scope="col" th:text="#{report.onTime}"></th><th scope="col" th:text="#{report.late}"></th><th scope="col" th:text="#{report.pending}"></th><th scope="col" th:text="#{report.unknown}"></th><th scope="col" th:text="#{report.onTimePercent}"></th><th scope="col" th:text="#{report.latePercent}"></th></tr></thead>
+                            <tbody><tr th:each="row : ${section.outcomes()}"><th scope="row" th:text="${#messages.msg('option.' + section.field() + '.' + row.code())}"></th><td th:text="${row.total()}"></td><td th:text="${row.known()}"></td><td th:text="${row.onTime()}"></td><td th:text="${row.late()}"></td><td th:text="${row.pending()}"></td><td th:text="${row.unknown()}"></td><td th:text="${row.onTimePercent() != null ? #numbers.formatDecimal(row.onTimePercent(),1,1) + '%' : #messages.msg('report.noData')}"></td><td th:text="${row.latePercent() != null ? #numbers.formatDecimal(row.latePercent(),1,1) + '%' : #messages.msg('report.noData')}"></td></tr></tbody>
+                        </table>
+                    </div>
+                </details>
+                <script type="application/json" data-report-payload th:attr="data-report-target=${'relationship-' + section.field()}" th:inline="javascript">
+                {"field": /*[[${section.field()}]]*/ "", "kind": "relationship", "labels": /*[[${section.frequency().rows().![#messages.msg('option.' + #vars.section.field() + '.' + code())]}]]*/ [], "rows": /*[[${section.frequency().rows()}]]*/ [], "outcomes": /*[[${section.outcomes()}]]*/ [], "views": ["percentage", "multiple", "table"], "defaultView": "percentage", "text": {"count": /*[[#{report.count}]]*/ "", "percent": /*[[#{report.percent}]]*/ "", "onTime": /*[[#{report.onTime}]]*/ "", "late": /*[[#{report.late}]]*/ "", "known": /*[[#{report.known}]]*/ "", "category": /*[[#{report.category}]]*/ "", "noData": /*[[#{report.noData}]]*/ "", "pending": /*[[#{report.pending}]]*/ "", "unknown": /*[[#{report.unknown}]]*/ "", "total": /*[[#{report.total}]]*/ ""}}
+                </script>
+            </article>
+        </section>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </main>
+</div>
+</body>
+</html>

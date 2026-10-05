@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#080a09">
+  <meta name="description" content="Aggregated survey responses on assignment start time and submission outcomes.">
+  <title>Данные | До дедлайна</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/site.css">
+  <script defer src="/assets/js/lucide.min.js"></script><script defer src="/assets/js/app.js"></script><script defer src="/assets/js/chart.umd.min.js"></script><script defer src="/assets/js/study-data.js"></script><script defer src="/assets/js/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="common.skip">К основному содержанию</a>
+  <div class="app-shell">
+    <aside class="sidebar" id="app-sidebar" data-sidebar>
+      <button class="icon-button nav-close" type="button" data-nav-close aria-label="Закрыть меню" data-i18n-aria="common.close"><i data-lucide="x" aria-hidden="true"></i></button>
+      <a class="brand" href="/" data-local-link><i data-lucide="timer" aria-hidden="true"></i><span><span data-i18n="brand.title">До дедлайна</span><small>DEADLINE DYNAMICS</small></span></a>
+      <nav class="main-nav" aria-label="Основная навигация"><span class="nav-section" data-i18n="nav.research">ИССЛЕДОВАНИЕ</span>
+        <a href="/" data-local-link><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span data-i18n="nav.overview">Обзор</span></a>
+        <a href="/data/" data-local-link class="active" aria-current="page"><i data-lucide="chart-column" aria-hidden="true"></i><span data-i18n="nav.data">Данные</span></a>
+        <a href="/simulator/" data-local-link><i data-lucide="flask-conical" aria-hidden="true"></i><span data-i18n="nav.lab">Лаборатория вероятностей</span></a>
+        <a href="/method/" data-local-link><i data-lucide="book-open" aria-hidden="true"></i><span data-i18n="nav.method">Формулы и методы</span></a>
+      </nav>
+      <div class="sidebar-note"><span class="tiny-label" data-i18n="brand.course">Теория вероятностей и статистика</span><p data-i18n="nav.tagline">Учебное исследование о сроках выполнения заданий.</p></div>
+    </aside>
+    <header class="utility-bar"><div class="utility-context"><button class="icon-button nav-toggle" type="button" data-nav-toggle aria-controls="app-sidebar" aria-expanded="false" aria-label="Открыть меню"><i data-lucide="menu" aria-hidden="true"></i></button><span class="utility-project">DEADLINE DYNAMICS</span><span class="utility-divider" aria-hidden="true">/</span><span data-i18n="nav.data">Данные</span></div>
+      <div class="utility-actions"><nav class="language-switcher" aria-label="Язык"><a href="/data/?lang=kk" data-language="kk" lang="kk" hreflang="kk" title="Қазақша">ҚАЗ</a><a href="/data/?lang=ru" data-language="ru" lang="ru" hreflang="ru" title="Русский" aria-current="true">РУС</a><a href="/data/?lang=en" data-language="en" lang="en" hreflang="en" title="English">ENG</a></nav></div>
+    </header><div class="drawer-overlay" data-nav-overlay hidden aria-hidden="true"></div>
+    <main id="main" class="main-content static-content" data-workspace data-page="data">
+      <header class="page-heading"><div><p class="eyebrow" data-i18n="data.eyebrow">ОПИСАНИЕ ВЫБОРКИ</p><h1 data-i18n="data.title">Что показывают ответы?</h1><p class="page-subtitle" data-i18n="data.subtitle">Частоты и сравнения помогают увидеть, как распределены ответы и насколько различаются исходы по группам.</p></div></header>
+      <section class="data-context" aria-label="Контекст данных" data-i18n-aria="data.context"><div><span data-i18n="overview.eligible">Подходящие наблюдения</span><strong>29</strong></div><div><span data-i18n="overview.known">Известен исход сдачи</span><strong>23</strong></div><div><span data-i18n="overview.pending">Пока не сдано</span><strong>6</strong></div><p data-i18n="data.denominator">Распределения включают все 29 подходящих ответов. Доля «вовремя» рассчитывается только среди известных исходов; «пока не сдано» показано отдельно.</p></section>
+      <section class="panel-section" aria-labelledby="distribution-title"><div class="section-heading"><div><p class="eyebrow" data-i18n="data.distributionEyebrow">ОДНА ПЕРЕМЕННАЯ</p><h2 id="distribution-title" data-i18n="data.distributionTitle">Как часто встречается каждый ответ?</h2></div></div>
+        <div class="data-controls"><label><span data-i18n="data.chooseVariable">Переменная</span><select id="variableSelect" aria-label="Выберите переменную" data-i18n-aria="data.chooseVariable"></select></label><div class="view-switcher" role="group" aria-label="Вид распределения" data-i18n-aria="view.chartType"><button type="button" data-distribution-view="count" aria-pressed="true" data-i18n="view.count">Количество</button><button type="button" data-distribution-view="percent" aria-pressed="false" data-i18n="view.percent">Проценты</button><button type="button" data-distribution-view="table" aria-pressed="false" data-i18n="view.table">Таблица</button></div></div>
+        <div class="chart-frame"><canvas id="distributionChart" role="img" aria-label="Частоты выбранной переменной"></canvas></div><p class="chart-description" id="distributionChartText" aria-live="polite"></p><details class="exact-details"><summary data-i18n="data.exact">Точные значения</summary><div id="distributionExact" class="table-scroll" tabindex="0"></div></details>
+      </section>
+      <section class="panel-section" aria-labelledby="relationship-title"><div class="section-heading"><div><p class="eyebrow" data-i18n="data.comparisonEyebrow">СВЯЗЬ С ИСХОДОМ</p><h2 id="relationship-title" data-i18n="data.comparisonTitle">Как распределились исходы внутри групп?</h2></div></div>
+        <div class="data-controls"><label><span data-i18n="data.choosePredictor">Группирующая переменная</span><select id="relationshipSelect" aria-label="Выберите группирующую переменную" data-i18n-aria="data.choosePredictor"></select></label><div class="view-switcher" role="group" aria-label="Вид сравнения" data-i18n-aria="view.chartType"><button type="button" data-relationship-view="percent" aria-pressed="true" data-i18n="view.percent">Проценты</button><button type="button" data-relationship-view="count" aria-pressed="false" data-i18n="view.count">Количество</button><button type="button" data-relationship-view="table" aria-pressed="false" data-i18n="view.table">Таблица</button></div></div>
+        <p class="chart-caption" data-i18n="data.knownOnly">Сравнение долей использует только сданные задания с известным исходом; число ожидающих отображается в таблице.</p><div class="chart-frame chart-frame-relationship"><canvas id="relationshipChart" role="img" aria-label="Исходы сдачи внутри выбранных групп"></canvas></div><p class="chart-description" id="relationshipChartText" aria-live="polite"></p><details class="exact-details"><summary data-i18n="data.exact">Точные значения</summary><div id="relationshipExact" class="table-scroll" tabindex="0"></div></details>
+      </section>
+      <section class="closing-row" aria-label="Источник и ограничения" data-i18n-aria="overview.sourceAndLimits"><div class="source-line"><i data-lucide="database" aria-hidden="true"></i><p><strong data-i18n="data.snapshotTitle">Срез данных</strong><span data-i18n="data.snapshotText">52 ответа получены через Google Forms с 30 сентября по 2 октября 2026 года. Публикуются агрегированные частоты, а не строки индивидуальных ответов.</span></p></div><p class="limitation-line" data-i18n="overview.limit">Выборка добровольная и неслучайная. Наблюдаемая связь не доказывает причинность и не описывает всех студентов.</p></section>
+      <footer class="page-footer"><span data-i18n="footer">Учебный проект по теории вероятностей и статистике</span><a href="/method/" data-local-link data-i18n="footer.method">Как читать методы</a></footer>
+    </main>
+  </div>
+</body>
+</html>

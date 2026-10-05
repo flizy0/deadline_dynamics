@@ -1,0 +1,5 @@
+<!DOCTYPE html>
+<html lang="ru" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{thanks.context})}"></head><body><a class="skip-link" href="#main" th:text="#{common.skip}"></a><div class="app-shell"><aside th:replace="~{fragments :: sidebar}"></aside><th:block th:replace="~{fragments :: utilityBar(#{thanks.context})}"></th:block><main id="main" class="main-content" data-workspace>
+<section class="empty-state success-state"><i data-lucide="circle-check" aria-hidden="true"></i><h1 th:text="#{thanks.title}"></h1><p th:text="#{thanks.saved}"></p><p th:if="${!eligible}" th:text="#{thanks.ineligible}"></p><a class="button" th:href="@{/(dataset='real')}" th:text="#{thanks.explore}"></a></section>
+<footer th:replace="~{fragments :: footer}"></footer></main></div></body></html>

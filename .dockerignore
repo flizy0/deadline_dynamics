@@ -1,0 +1,8 @@
+target
+.runtime
+local.env
+.env
+.git
+.idea
+google
+app.jar

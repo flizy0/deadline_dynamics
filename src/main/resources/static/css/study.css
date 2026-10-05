@@ -1,0 +1,100 @@
+.study-content .page-heading { align-items: flex-start; }
+.method-content { max-width: 1360px; }
+.method-content .page-heading { margin-bottom: 36px; }
+.method-content .page-subtitle { font-size: 15px; line-height: 1.6; max-width: 65ch; }
+.method-content h2 { font-size: 22px; line-height: 1.35; margin: 0; font-weight: 550; }
+.method-process { margin-bottom: 48px; }
+.method-timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; list-style: none; padding: 0; margin: 24px 0 0; }
+.method-timeline > li { position: relative; min-width: 0; }
+.method-timeline > li::before { content: ""; position: absolute; top: 16px; left: 32px; width: calc(100% - 8px); height: 1px; background: var(--line-strong, var(--line)); }
+.method-timeline > li:last-child::before { display: none; }
+.method-step { position: relative; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; color: var(--teal); background: var(--canvas); border: 1px solid var(--line); border-radius: 50%; font-size: 12px; font-variant-numeric: tabular-nums; }
+.method-timeline h3 { margin: 16px 0 8px; font-size: 16px; font-weight: 550; line-height: 1.35; overflow-wrap: anywhere; }
+.method-timeline p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.55; overflow-wrap: anywhere; }
+.method-library > h2 { padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.formula-group { padding: 32px 0 40px; border-bottom: 1px solid var(--line); }
+.formula-group-heading { display: flex; align-items: baseline; gap: 16px; margin-bottom: 12px; }
+.formula-group-number { color: var(--blue); font-size: 14px; font-variant-numeric: tabular-nums; }
+.formula-group-heading h3 { min-width: 0; margin: 0; font-size: 20px; line-height: 1.4; font-weight: 550; overflow-wrap: anywhere; }
+.formula-notation { margin: 0 0 24px; max-width: 85ch; color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+.formula-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.formula-card { display: flex; flex-direction: column; min-width: 0; padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-control); }
+.formula-card h4 { margin: 0; font-size: 16px; font-weight: 550; line-height: 1.4; overflow-wrap: anywhere; }
+.formula-card p { margin: 0 0 12px; color: var(--text-secondary); font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+.formula-card .formula-use { margin-top: auto; margin-bottom: 0; padding-top: 4px; }
+.formula-use strong { font-weight: 500; color: var(--text); }
+.formula-expression { display: flex; align-items: center; min-height: 92px; padding: 20px 0; font-size: 28px; color: var(--text); }
+.formula-expression math, .method-example-calculation math { margin: 0; max-width: 100%; text-align: left; font-family: "Cambria Math", "STIX Two Math", math, serif; font-size: inherit; }
+.formula-expression-compact { font-size: 23px; }
+.formula-expression-tail { min-height: 120px; padding: 16px 0; font-size: 22px; }
+.formula-card-wide { grid-column: 1 / -1; }
+.formula-width-expressions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.method-example { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .7fr); gap: 32px; margin-top: 24px; padding: 24px 0 0; }
+.method-example > div { min-width: 0; }
+.method-example h4 { margin: 0 0 20px; font-size: 17px; line-height: 1.4; font-weight: 550; }
+.method-example-counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; }
+.method-example-counts > div { min-width: 0; }
+.method-example-counts dt { min-height: 2.9em; margin: 0 0 8px; font-size: 14px; line-height: 1.45; color: var(--text-secondary); overflow-wrap: anywhere; }
+.method-example-counts dd { margin: 0; font-size: 28px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.method-example-calculation { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px; padding-left: 24px; border-left: 1px solid var(--line); font-size: 28px; }
+.method-example-percent { margin: 0; color: var(--teal); font-size: 32px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.method-example-empty { margin: 0; align-self: center; color: var(--text-secondary); font-size: 15px; line-height: 1.6; }
+.method-limitations { padding: 36px 0 16px; }
+.method-limitations ul { max-width: 90ch; margin: 20px 0 0; padding-left: 20px; color: var(--text-secondary); font-size: 15px; line-height: 1.65; }
+.method-limitations li { padding-left: 4px; margin-bottom: 12px; }
+.method-limitations li::marker { color: var(--muted); }
+.source-content { max-width: 1220px; }
+.source-section { border-bottom: 1px solid var(--line); padding: 17px 0; }
+.source-section h2 { margin-top: 7px; }
+.source-section p { color: var(--text-secondary); font-size: 12px; max-width: 90ch; }
+.source-section p.muted { color: var(--muted); font-size: 11px; }
+.source-origin { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; border-top: 1px solid var(--line); }
+.source-origin > div { min-width: 0; flex: 1 1 400px; }
+.source-origin h2 { font-size: 18px; font-weight: 550; margin: 7px 0; }
+.source-origin .button { flex: 0 1 auto; }
+.source-section .source-observation { font-size: 17px; margin: 7px 0; color: var(--text); }
+.source-variables { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 22px; list-style: none; margin: 11px 0 0; padding: 0; }
+.source-variables li { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 11.5px; min-width: 0; }
+.source-variables li span { overflow-wrap: anywhere; min-width: 0; }
+.source-variables .lucide { color: var(--muted); width: 15px; height: 15px; }
+.source-limitations p:last-child { margin-bottom: 0; }
+.study-inline-link { display: inline-block; margin-top: 15px; font-size: 11px; }
+@media (max-width: 1100px) {
+    .method-timeline { gap: 16px; }
+    .formula-card { padding: 20px; }
+    .formula-expression-compact { font-size: 21px; }
+    .formula-expression-tail { font-size: 20px; }
+}
+@media (max-width: 900px) {
+    .formula-grid { grid-template-columns: minmax(0, 1fr); }
+    .formula-card-wide { grid-column: auto; }
+    .method-example { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .method-example-calculation { padding: 0; border: 0; }
+}
+@media (max-width: 767px) {
+    .method-content .page-heading { margin-bottom: 28px; }
+    .method-process { margin-bottom: 36px; }
+    .method-timeline { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .method-timeline > li { padding: 0 0 24px 52px; }
+    .method-timeline > li:last-child { padding-bottom: 0; }
+    .method-timeline > li::before { top: 32px; left: 16px; width: 1px; height: calc(100% - 16px); }
+    .method-step { position: absolute; top: 0; left: 0; }
+    .method-timeline h3 { margin: 4px 0 6px; }
+    .formula-group { padding: 28px 0 32px; }
+    .formula-group-heading { gap: 12px; }
+    .formula-grid { gap: 12px; }
+    .formula-width-expressions { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .formula-width-expressions .formula-expression + .formula-expression { padding-top: 0; min-height: 72px; }
+    .source-variables { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 479px) {
+    .method-content h2 { font-size: 21px; }
+    .formula-group-heading h3 { font-size: 19px; }
+    .formula-card { padding: 20px 16px; }
+    .formula-expression { font-size: 26px; }
+    .formula-expression-compact, .formula-expression-tail { font-size: 20px; }
+    .method-example-counts { gap: 12px; }
+    .method-example-calculation { font-size: 26px; }
+    .source-variables { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .source-section .source-observation { font-size: 16px; }
+}

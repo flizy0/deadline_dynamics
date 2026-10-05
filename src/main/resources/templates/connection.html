@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{study.source.title})}"></head>
+<body>
+<a class="skip-link" href="#main" th:text="#{common.skip}"></a>
+<div class="app-shell">
+    <aside th:replace="~{fragments :: sidebar}"></aside>
+    <th:block th:replace="~{fragments :: utilityBar(#{study.source.title})}"></th:block>
+    <main id="main" class="main-content study-content source-content" data-workspace>
+        <header class="page-heading">
+            <div>
+                <p class="eyebrow" th:text="#{brand.name}"></p>
+                <h1 th:text="#{study.source.title}"></h1>
+                <p class="page-subtitle" th:text="#{study.source.intro}"></p>
+            </div>
+        </header>
+
+        <section class="source-section source-origin" aria-labelledby="source-origin-title">
+            <div>
+                <span class="tiny-label" th:text="#{study.source.channel}"></span>
+                <h2 id="source-origin-title">Google Forms</h2>
+                <p th:text="#{study.source.collection}"></p>
+                <p class="muted" th:if="${realCount > 0}" th:text="#{study.source.realCount(${realCount})}"></p>
+                <p class="muted" th:unless="${realCount > 0}" th:text="#{study.source.empty}"></p>
+            </div>
+            <a class="button" th:href="${googleForm}" target="_blank" rel="noopener noreferrer" data-source-questionnaire><span th:text="#{study.source.open}"></span><i data-lucide="external-link" aria-hidden="true"></i></a>
+        </section>
+
+        <section class="source-section" aria-labelledby="source-observation-title">
+            <span class="tiny-label">01</span>
+            <h2 id="source-observation-title" th:text="#{study.source.observation}"></h2>
+            <p class="source-observation" th:text="#{study.source.observationCopy}"></p>
+            <p class="muted" th:text="#{study.source.observationDetail}"></p>
+        </section>
+
+        <section class="source-section" aria-labelledby="source-variables-title">
+            <span class="tiny-label">02</span>
+            <h2 id="source-variables-title" th:text="#{study.source.variables}"></h2>
+            <ul class="source-variables">
+                <li><i data-lucide="clock-3" aria-hidden="true"></i><span th:text="#{study.variable.allotted}"></span></li>
+                <li><i data-lucide="play" aria-hidden="true"></i><span th:text="#{study.variable.start}"></span></li>
+                <li><i data-lucide="check" aria-hidden="true"></i><span th:text="#{study.variable.outcome}"></span></li>
+                <li><i data-lucide="calendar-plus" aria-hidden="true"></i><span th:text="#{study.variable.extension}"></span></li>
+                <li><i data-lucide="list-checks" aria-hidden="true"></i><span th:text="#{study.variable.planning}"></span></li>
+                <li><i data-lucide="chart-no-axes-column" aria-hidden="true"></i><span th:text="#{study.variable.difficulty}"></span></li>
+                <li><i data-lucide="layers" aria-hidden="true"></i><span th:text="#{study.variable.other}"></span></li>
+            </ul>
+        </section>
+
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </main>
+</div>
+</body>
+</html>

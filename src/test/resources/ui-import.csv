@@ -1,0 +1,3 @@
+externalId,submittedAt,eligible,assignmentType,allottedBand,startBand,submissionStatus,extensionStatus,planning,difficulty,otherDeadlines
+example-001,2026-09-01T10:00:00Z,true,CODE,THREE_FOUR,ONE,ON_TIME,NO,MENTAL,3,TWO
+example-002,2026-09-01T11:00:00Z,true,LAB,FIVE_SEVEN,SAME_DAY,LATE,NO,NONE,4,THREE

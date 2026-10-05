@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title th:text="${title + ' | '} + #{brand.name}">Deadline Dynamics</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" th:href="@{/css/explorer.css}">
+    <link rel="stylesheet" th:href="@{/css/lab.css}">
+    <link rel="stylesheet" th:href="@{/css/study.css}">
+    <link rel="stylesheet" th:href="@{/css/report.css}">
+    <link rel="stylesheet" th:href="@{/css/overview.css}">
+    <script defer th:src="@{/js/lucide.min.js}"></script>
+    <script defer th:src="@{/js/app.js}"></script>
+    <script defer th:src="@{/js/chart.umd.min.js}"></script>
+    <script defer th:src="@{/js/charts.js}"></script>
+    <script defer th:src="@{/js/explorer.js}"></script>
+    <script defer th:src="@{/js/lab.js}"></script>
+    <script defer th:src="@{/js/report.js}"></script>
+</head>
+<body>
+<aside class="sidebar" id="app-sidebar" data-sidebar th:fragment="sidebar">
+    <button class="icon-button nav-close" type="button" data-nav-close th:aria-label="#{common.closeNavigation}" th:title="#{common.closeNavigation}"><i data-lucide="x" aria-hidden="true"></i></button>
+    <a class="brand" th:href="@{/(dataset=${dataset})}"><i data-lucide="timer" aria-hidden="true"></i><span th:text="#{brand.name}">Deadline Dynamics</span></a>
+    <nav class="main-nav" th:aria-label="#{common.navigation}">
+        <a th:href="@{/(dataset=${dataset})}" th:classappend="${page == 'dashboard' ? 'active' : ''}"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span th:text="#{nav.dashboard}"></span></a>
+        <a th:href="@{/data(dataset=${dataset})}" th:classappend="${page == 'frequencies' ? 'active' : ''}"><i data-lucide="chart-column" aria-hidden="true"></i><span th:text="#{nav.frequencies}"></span></a>
+        <a th:href="@{/simulator(dataset=${dataset})}" th:classappend="${page == 'simulator' ? 'active' : ''}"><i data-lucide="flask-conical" aria-hidden="true"></i><span th:text="#{nav.simulator}"></span></a>
+        <a th:href="@{/method(dataset=${dataset})}" th:classappend="${page == 'method' ? 'active' : ''}"><i data-lucide="book-open" aria-hidden="true"></i><span th:text="#{nav.method}"></span></a>
+    </nav>
+    <div class="sidebar-note"><p th:text="#{brand.course}"></p></div>
+</aside>
+<th:block th:fragment="utilityBar(context)">
+    <header class="utility-bar">
+        <div class="utility-context"><button class="icon-button nav-toggle" type="button" data-nav-toggle aria-controls="app-sidebar" aria-expanded="false" th:aria-label="#{common.openNavigation}" th:title="#{common.openNavigation}"><i data-lucide="menu" aria-hidden="true"></i></button><span class="utility-project" th:text="#{brand.name}"></span><span class="utility-divider" aria-hidden="true">/</span><span th:text="${context}"></span></div>
+        <div class="utility-actions">
+            <div class="utility-status" th:if="${dataset == 'demo'}"><span th:text="#{dataset.demoShort}"></span></div>
+            <nav class="language-switcher" th:aria-label="#{common.language}">
+                <a th:href="${languageUrls['kk']}" lang="kk" hreflang="kk" title="Қазақша" th:aria-current="${currentLanguage == 'kk' ? 'true' : null}">ҚАЗ</a>
+                <a th:href="${languageUrls['ru']}" lang="ru" hreflang="ru" title="Русский" th:aria-current="${currentLanguage == 'ru' ? 'true' : null}">РУС</a>
+                <a th:href="${languageUrls['en']}" lang="en" hreflang="en" title="English" th:aria-current="${currentLanguage == 'en' ? 'true' : null}">ENG</a>
+            </nav>
+        </div>
+    </header>
+    <div class="drawer-overlay" data-nav-overlay hidden aria-hidden="true"></div>
+</th:block>
+<div th:fragment="datasetNotice" class="dataset-notice" th:classappend="${dataset == 'demo' ? 'demo-notice' : 'real-notice'}">
+    <div><strong th:text="${dataset == 'demo'} ? #{dataset.demo} : #{dataset.real}"></strong>
+    <span th:if="${dataset == 'demo'}" th:text="#{dataset.demoNote}"></span>
+    <span th:if="${dataset == 'real'}" th:text="#{dataset.realNote(${realCount})}"></span></div>
+    <a th:if="${dataset == 'demo'}" th:href="${datasetUrls['real']}" th:text="#{dataset.toReal}"></a>
+    <a th:if="${dataset == 'real'}" th:href="${datasetUrls['demo']}" th:text="#{dataset.toDemo}"></a>
+</div>
+<div th:fragment="filters" class="filter-fields">
+    <label><span th:text="#{short.allottedBand}"></span><select name="allotted"><option value="" th:text="#{filter.allDeadlines}"></option><option th:each="item : ${bands}" th:value="${item.key}" th:text="#{${'option.allottedBand.' + item.key}}" th:selected="${filter.allotted() == item.key}"></option></select></label>
+    <label><span th:text="#{short.startBand}"></span><select name="start"><option value="" th:text="#{filter.allOptions}"></option><option th:each="item : ${starts}" th:value="${item.key}" th:text="#{${'option.startBand.' + item.key}}" th:selected="${filter.start() == item.key}"></option></select></label>
+    <label><span th:text="#{short.planning}"></span><select name="planning"><option value="" th:text="#{filter.allOptions}"></option><option th:each="item : ${plans}" th:value="${item.key}" th:text="#{${'option.planning.' + item.key}}" th:selected="${filter.planning() == item.key}"></option></select></label>
+</div>
+<section th:fragment="groupTable(title, rows)" class="data-section">
+    <div class="section-heading"><h2 th:text="${title}"></h2><span class="muted" th:text="#{table.originalDeadline}"></span></div>
+    <div class="table-scroll"><table><thead><tr><th scope="col" th:text="#{common.category}"></th><th scope="col" th:text="#{common.responses}"></th><th scope="col" th:text="#{table.onTimeKnown}"></th><th scope="col" th:text="#{table.onTimePercent}"></th></tr></thead><tbody>
+    <tr th:each="row : ${rows}"><th scope="row" th:text="#{${'option.' + row.field() + '.' + row.code()}}"></th><td th:text="${row.summary().total()}"></td><td th:text="${row.summary().onTime() + ' / ' + row.summary().known()}"></td>
+    <td><div class="table-bar"><span class="table-bar-track"><i th:style="${'width:' + row.summary().onTimePercent() + '%'}"></i></span><strong th:text="${row.summary().known() > 0} ? ${#numbers.formatDecimal(row.summary().onTimePercent(),1,1)} : #{common.noData}"></strong></div></td></tr>
+    </tbody></table></div><p class="chart-caption" th:text="#{table.denominator}"></p>
+</section>
+<footer th:fragment="footer" class="page-footer"><span th:text="#{footer.study}"></span></footer>
+</body></html>

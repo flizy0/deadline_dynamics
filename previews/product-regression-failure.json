@@ -1,0 +1,7 @@
+{
+  "url": "chrome-error://chromewebdata/",
+  "layoutChecks": 0,
+  "failures": [],
+  "errors": [],
+  "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8086/?dataset=demo&lang=ru\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8086/?dataset=demo&lang=ru\", waiting until \"networkidle\"\u001b[22m\n"
+}

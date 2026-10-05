@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{overview.title})}"></head>
+<body>
+<a class="skip-link" href="#main" th:text="#{common.skip}"></a>
+<div class="app-shell">
+    <aside th:replace="~{fragments :: sidebar}"></aside>
+    <th:block th:replace="~{fragments :: utilityBar(#{nav.dashboard})}"></th:block>
+    <main id="main" class="main-content overview-content" data-workspace>
+        <header class="page-heading overview-heading">
+            <div>
+                <p class="eyebrow" th:text="#{brand.study}"></p>
+                <h1 th:text="#{brand.name}">Deadline Dynamics</h1>
+                <p class="page-subtitle" th:text="#{overview.question}"></p>
+            </div>
+        </header>
+
+        <section class="overview-sample" th:aria-label="#{overview.sample}">
+            <dl class="overview-metrics">
+                <div><dt th:text="#{overview.metric.eligible}"></dt><dd th:text="${summary.total()}"></dd></div>
+                <div><dt th:text="#{overview.metric.known}"></dt><dd th:text="${summary.known()}"></dd></div>
+                <div class="overview-metric-on-time"><dt th:text="#{common.onTime}"></dt><dd th:text="${summary.onTime()}"></dd></div>
+                <div class="overview-metric-late"><dt th:text="#{common.late}"></dt><dd th:text="${summary.late()}"></dd></div>
+            </dl>
+            <div class="overview-outcome" aria-labelledby="overview-outcome-title">
+                <div>
+                    <h2 id="overview-outcome-title" th:text="#{overview.outcome}"></h2>
+                    <p class="overview-fraction" th:aria-label="#{overview.fraction(${summary.onTime()},${summary.known()})}">
+                        <span th:text="${summary.onTime()}"></span><span class="overview-fraction-divider" aria-hidden="true">/</span><span th:text="${summary.known()}"></span>
+                    </p>
+                </div>
+                <strong class="overview-outcome-percent" th:text="${summary.known() > 0 ? #numbers.formatDecimal(summary.onTimePercent(),1,1) + '%' : #messages.msg('common.noData')}"></strong>
+            </div>
+        </section>
+
+        <p class="overview-empty" th:if="${summary.total() == 0}" th:text="#{overview.empty}"></p>
+
+        <section th:each="section : ${sections}"
+                 th:if="${summary.total() > 0 and (section.field() == 'startBand' or section.field() == 'planning' or section.field() == 'difficulty')}"
+                 th:with="relationship=${section.field() != 'difficulty'},sectionId=${'overview-' + section.field()}"
+                 class="overview-section report-workspace"
+                 th:classappend="${section.field() == 'startBand' ? 'overview-main-chart' : 'overview-secondary-chart'}"
+                 th:id="${sectionId}" data-report-workspace
+                 th:attr="aria-labelledby=${sectionId + '-title'},data-overview-kind=${relationship ? 'relationship' : 'distribution'}">
+            <div class="overview-section-heading">
+                <h2 th:id="${sectionId + '-title'}" th:text="${#messages.msg('overview.chart.' + section.field())}"></h2>
+                <span class="overview-n" th:text="${'n = ' + (relationship ? summary.known() : section.frequency().total())}"></span>
+            </div>
+            <div class="report-view-selector" role="group" th:aria-label="#{overview.view}">
+                <th:block th:if="${relationship}">
+                    <button type="button" data-report-view="percentage" aria-pressed="true" th:title="#{overview.view.percentage}"><i data-lucide="chart-bar-stacked" aria-hidden="true"></i><span th:text="#{overview.view.percentage}"></span></button>
+                    <button type="button" data-report-view="multiple" aria-pressed="false" th:title="#{overview.view.multiple}"><i data-lucide="chart-no-axes-column" aria-hidden="true"></i><span th:text="#{overview.view.multiple}"></span></button>
+                    <button type="button" data-report-view="table" aria-pressed="false" th:title="#{overview.view.table}"><i data-lucide="table-2" aria-hidden="true"></i><span th:text="#{overview.view.table}"></span></button>
+                </th:block>
+                <th:block th:unless="${relationship}">
+                    <button type="button" data-report-view="line" aria-pressed="true" th:title="#{overview.view.line}"><i data-lucide="chart-line" aria-hidden="true"></i><span th:text="#{overview.view.line}"></span></button>
+                    <button type="button" data-report-view="bars" aria-pressed="false" th:title="#{overview.view.bars}"><i data-lucide="chart-bar" aria-hidden="true"></i><span th:text="#{overview.view.bars}"></span></button>
+                    <button type="button" data-report-view="table" aria-pressed="false" th:title="#{overview.view.table}"><i data-lucide="table-2" aria-hidden="true"></i><span th:text="#{overview.view.table}"></span></button>
+                </th:block>
+            </div>
+            <div class="report-chart">
+                <canvas role="img" th:attr="aria-label=${#messages.msg('overview.chart.' + section.field())},aria-describedby=${sectionId + '-exact'}"></canvas>
+            </div>
+            <details class="report-exact" th:id="${sectionId + '-exact'}">
+                <summary th:text="#{overview.exact}"></summary>
+                <div class="table-scroll" tabindex="0" th:aria-label="#{overview.exact}">
+                    <table th:if="${relationship}">
+                        <caption class="sr-only" th:text="${#messages.msg('overview.chart.' + section.field())}"></caption>
+                        <thead><tr><th scope="col" th:text="#{common.category}"></th><th scope="col" th:text="#{common.total}"></th><th scope="col" th:text="#{common.known}"></th><th scope="col" th:text="#{common.onTime}"></th><th scope="col" th:text="#{common.late}"></th><th scope="col" th:text="#{common.pending}"></th><th scope="col" th:text="#{common.unknown}"></th><th scope="col" th:text="#{overview.onTimePercent}"></th><th scope="col" th:text="#{overview.latePercent}"></th></tr></thead>
+                        <tbody><tr th:each="row : ${section.outcomes()}"><th scope="row" th:text="${#messages.msg('option.' + section.field() + '.' + row.code())}"></th><td th:text="${row.total()}"></td><td th:text="${row.known()}"></td><td th:text="${row.onTime()}"></td><td th:text="${row.late()}"></td><td th:text="${row.pending()}"></td><td th:text="${row.unknown()}"></td><td th:text="${row.onTimePercent() != null ? #numbers.formatDecimal(row.onTimePercent(),1,1) + '%' : #messages.msg('common.noData')}"></td><td th:text="${row.latePercent() != null ? #numbers.formatDecimal(row.latePercent(),1,1) + '%' : #messages.msg('common.noData')}"></td></tr></tbody>
+                    </table>
+                    <table th:unless="${relationship}">
+                        <caption class="sr-only" th:text="${#messages.msg('overview.chart.' + section.field())}"></caption>
+                        <thead><tr><th scope="col" th:text="#{common.category}"></th><th scope="col" th:text="#{common.responses}"></th><th scope="col" th:text="#{common.percent}"></th></tr></thead>
+                        <tbody><tr th:each="row : ${section.frequency().rows()}"><th scope="row" th:text="${#messages.msg('option.' + section.field() + '.' + row.code())}"></th><td th:text="${row.count()}"></td><td th:text="${#numbers.formatDecimal(row.percent(),1,1) + '%'}"></td></tr></tbody>
+                    </table>
+                </div>
+            </details>
+            <script type="application/json" data-report-payload th:attr="data-report-target=${sectionId}" th:inline="javascript">
+                {
+                    "field": /*[[${section.field()}]]*/ "",
+                    "kind": /*[[${relationship ? 'relationship' : 'distribution'}]]*/ "",
+                    "labels": /*[[${section.frequency().rows().![#messages.msg('option.' + #vars.section.field() + '.' + code())]}]]*/ [],
+                    "rows": /*[[${section.frequency().rows()}]]*/ [],
+                    "outcomes": /*[[${section.outcomes()}]]*/ [],
+                    "views": /*[[${relationship ? {'percentage', 'multiple', 'table'} : section.views()}]]*/ [],
+                    "defaultView": /*[[${relationship ? 'percentage' : 'line'}]]*/ "",
+                    "text": {
+                        "count": /*[[#{common.responses}]]*/ "",
+                        "percent": /*[[#{common.percent}]]*/ "",
+                        "onTime": /*[[#{common.onTime}]]*/ "",
+                        "late": /*[[#{common.late}]]*/ "",
+                        "known": /*[[#{common.known}]]*/ "",
+                        "category": /*[[#{common.category}]]*/ "",
+                        "noData": /*[[#{common.noData}]]*/ "",
+                        "pending": /*[[#{common.pending}]]*/ "",
+                        "unknown": /*[[#{common.unknown}]]*/ "",
+                        "total": /*[[#{common.total}]]*/ "",
+                        "special": /*[[#{report.special}]]*/ ""
+                    }
+                }
+            </script>
+        </section>
+
+        <section class="overview-source" aria-labelledby="overview-source-title">
+            <h2 id="overview-source-title" th:text="#{overview.source.title}"></h2>
+            <p class="overview-source-name" th:text="${#messages.msg(dataset == 'demo' ? 'overview.source.synthetic' : 'overview.source.google')}"></p>
+            <dl class="overview-source-facts">
+                <div><dt th:text="${#messages.msg(dataset == 'demo' ? 'overview.source.generated' : 'overview.source.collected')}"></dt><dd th:text="${allCount}"></dd></div>
+                <div><dt th:text="#{overview.metric.eligible}"></dt><dd th:text="${summary.total()}"></dd></div>
+                <div th:if="${dataset != 'demo' and collectionStart != null and collectionEnd != null}"><dt th:text="#{overview.source.period}"></dt><dd><time th:text="${collectionStart}"></time><span aria-hidden="true"> - </span><time th:text="${collectionEnd}"></time></dd></div>
+            </dl>
+        </section>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </main>
+</div>
+</body>
+</html>

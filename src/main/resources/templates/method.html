@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{study.method.title})}"></head>
+<body>
+<a class="skip-link" href="#main" th:text="#{common.skip}"></a>
+<div class="app-shell">
+    <aside th:replace="~{fragments :: sidebar}"></aside>
+    <th:block th:replace="~{fragments :: utilityBar(#{nav.method})}"></th:block>
+    <main id="main" class="main-content study-content method-content" data-workspace>
+        <header class="page-heading">
+            <div>
+                <p class="eyebrow" th:text="#{brand.name}"></p>
+                <h1 th:text="#{study.method.title}"></h1>
+                <p class="page-subtitle" th:text="#{study.method.intro}"></p>
+            </div>
+        </header>
+
+        <section class="method-process" aria-labelledby="method-process-title">
+            <h2 id="method-process-title" th:text="#{study.timeline.title}"></h2>
+            <ol class="method-timeline" data-method-timeline>
+                <li><span class="method-step">01</span><h3 th:text="#{study.timeline.collect}"></h3><p th:text="${#messages.msg(dataset == 'demo' ? 'study.timeline.syntheticDetail' : 'study.timeline.collectDetail')}"></p></li>
+                <li><span class="method-step">02</span><h3 th:text="#{study.timeline.select}"></h3><p th:text="#{study.timeline.selectDetail}"></p></li>
+                <li><span class="method-step">03</span><h3 th:text="#{study.timeline.describe}"></h3><p th:text="#{study.timeline.describeDetail}"></p></li>
+                <li><span class="method-step">04</span><h3 th:text="#{study.timeline.compare}"></h3><p th:text="#{study.timeline.compareDetail}"></p></li>
+                <li><span class="method-step">05</span><h3 th:text="#{study.timeline.model}"></h3><p th:text="#{study.timeline.modelDetail}"></p></li>
+            </ol>
+        </section>
+
+        <section class="method-library" aria-labelledby="method-library-title" data-formula-library>
+            <h2 id="method-library-title" th:text="#{study.formulas.title}"></h2>
+
+            <section class="formula-group" aria-labelledby="formula-describe-title" data-formula-group="describe">
+                <header class="formula-group-heading"><span class="formula-group-number">01</span><h3 id="formula-describe-title" th:text="#{study.group.describe}"></h3></header>
+                <p class="formula-notation" th:text="#{study.notation.describe}"></p>
+                <div class="formula-grid">
+                    <article class="formula-card" data-formula="frequency">
+                        <h4 th:text="#{study.formula.frequency.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>f</mi><mi>i</mi></msub><mo>=</mo><mo>#</mo><mo>{</mo><mi>j</mi><mo>:</mo><msub><mi>y</mi><mi>j</mi></msub><mo>=</mo><msub><mi>c</mi><mi>i</mi></msub><mo>}</mo></math></div>
+                        <p th:text="#{study.formula.frequency.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.frequency.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="relative">
+                        <h4 th:text="#{study.formula.relative.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><mfrac><msub><mi>f</mi><mi>i</mi></msub><mi>N</mi></mfrac></math></div>
+                        <p th:text="#{study.formula.relative.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.relative.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="percentage">
+                        <h4 th:text="#{study.formula.percentage.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><mfrac><msub><mi>f</mi><mi>i</mi></msub><mi>N</mi></mfrac><mo>&#x00D7;</mo><mn>100</mn><mo>%</mo></math></div>
+                        <p th:text="#{study.formula.percentage.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.percentage.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="mode">
+                        <h4 th:text="#{study.formula.mode.name}"></h4>
+                        <div class="formula-expression formula-expression-compact"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>Mo</mi><mo>=</mo><mo>{</mo><msub><mi>c</mi><mi>i</mi></msub><mo>:</mo><msub><mi>f</mi><mi>i</mi></msub><mo>=</mo><msub><mi>f</mi><mi mathvariant="normal">max</mi></msub><mo>&gt;</mo><mn>0</mn><mo>}</mo></math></div>
+                        <p th:text="#{study.formula.mode.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.mode.use}"></span></p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="formula-group" aria-labelledby="formula-compare-title" data-formula-group="compare">
+                <header class="formula-group-heading"><span class="formula-group-number">02</span><h3 id="formula-compare-title" th:text="#{study.group.compare}"></h3></header>
+                <p class="formula-notation" th:text="#{study.notation.compare}"></p>
+                <div class="formula-grid">
+                    <article class="formula-card" data-formula="observed">
+                        <h4 th:text="#{study.formula.observed.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mover><mi>p</mi><mo>^</mo></mover><mo>=</mo><mfrac><mi>S</mi><mrow><mi>S</mi><mo>+</mo><mi>L</mi></mrow></mfrac></math></div>
+                        <p th:text="#{study.formula.observed.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.observed.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="difference">
+                        <h4 th:text="#{study.formula.difference.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>&#x0394;</mi><mi mathvariant="normal">pp</mi></msub><mo>=</mo><mn>100</mn><mo>(</mo><msub><mover><mi>p</mi><mo>^</mo></mover><mn>1</mn></msub><mo>&#x2212;</mo><msub><mover><mi>p</mi><mo>^</mo></mover><mn>2</mn></msub><mo>)</mo></math></div>
+                        <p th:text="#{study.formula.difference.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.difference.use}"></span></p>
+                    </article>
+                </div>
+                <section class="method-example" aria-labelledby="method-example-title" data-worked-example>
+                    <div>
+                        <h4 id="method-example-title" th:text="#{study.example.title}"></h4>
+                        <dl class="method-example-counts">
+                            <div><dt th:text="#{study.example.onTime}"></dt><dd th:text="${summary.onTime}"></dd></div>
+                            <div><dt th:text="#{study.example.late}"></dt><dd th:text="${summary.late}"></dd></div>
+                            <div><dt th:text="#{study.example.known}"></dt><dd th:text="${summary.known}"></dd></div>
+                        </dl>
+                    </div>
+                    <div class="method-example-calculation" th:if="${summary.known > 0}">
+                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mover><mi>p</mi><mo>^</mo></mover><mo>=</mo><mfrac><mn th:text="${summary.onTime}"></mn><mn th:text="${summary.known}"></mn></mfrac><mo>&#x2248;</mo><mn th:text="${#numbers.formatDecimal(summary.onTimePercent / 100.0, 1, 3)}"></mn></math>
+                        <p class="method-example-percent"><span aria-hidden="true">&#x2248; </span><span th:text="${#numbers.formatDecimal(summary.onTimePercent, 1, 1)}"></span><span>%</span></p>
+                    </div>
+                    <p class="method-example-empty" th:unless="${summary.known > 0}" th:text="#{study.example.empty}"></p>
+                </section>
+            </section>
+
+            <section class="formula-group" aria-labelledby="formula-model-title" data-formula-group="model">
+                <header class="formula-group-heading"><span class="formula-group-number">03</span><h3 id="formula-model-title" th:text="#{study.group.model}"></h3></header>
+                <p class="formula-notation" th:text="#{study.notation.model}"></p>
+                <div class="formula-grid">
+                    <article class="formula-card" data-formula="combinations">
+                        <h4 th:text="#{study.formula.combinations.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>C</mi><mo>(</mo><mi>n</mi><mo>,</mo><mi>k</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>n</mi><mo>!</mo></mrow><mrow><mi>k</mi><mo>!</mo><mo>(</mo><mi>n</mi><mo>&#x2212;</mo><mi>k</mi><mo>)</mo><mo>!</mo></mrow></mfrac></math></div>
+                        <p th:text="#{study.formula.combinations.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.combinations.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="binomial">
+                        <h4 th:text="#{study.formula.binomial.name}"></h4>
+                        <div class="formula-expression formula-expression-compact"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>P</mi><mo>(</mo><mi>X</mi><mo>=</mo><mi>k</mi><mo>)</mo><mo>=</mo><mi>C</mi><mo>(</mo><mi>n</mi><mo>,</mo><mi>k</mi><mo>)</mo><msup><mi>p</mi><mi>k</mi></msup><msup><mrow><mo>(</mo><mn>1</mn><mo>&#x2212;</mo><mi>p</mi><mo>)</mo></mrow><mrow><mi>n</mi><mo>&#x2212;</mo><mi>k</mi></mrow></msup></math></div>
+                        <p th:text="#{study.formula.binomial.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.binomial.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="expected">
+                        <h4 th:text="#{study.formula.expected.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi mathvariant="normal">E</mi><mo>[</mo><mi>X</mi><mo>]</mo><mo>=</mo><mi>n</mi><mi>p</mi></math></div>
+                        <p th:text="#{study.formula.expected.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.expected.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="variance">
+                        <h4 th:text="#{study.formula.variance.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi mathvariant="normal">Var</mi><mo>(</mo><mi>X</mi><mo>)</mo><mo>=</mo><mi>n</mi><mi>p</mi><mo>(</mo><mn>1</mn><mo>&#x2212;</mo><mi>p</mi><mo>)</mo></math></div>
+                        <p th:text="#{study.formula.variance.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.variance.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="deviation">
+                        <h4 th:text="#{study.formula.deviation.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>&#x03C3;</mi><mo>=</mo><msqrt><mrow><mi>n</mi><mi>p</mi><mo>(</mo><mn>1</mn><mo>&#x2212;</mo><mi>p</mi><mo>)</mo></mrow></msqrt></math></div>
+                        <p th:text="#{study.formula.deviation.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.deviation.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="tail">
+                        <h4 th:text="#{study.formula.tail.name}"></h4>
+                        <div class="formula-expression formula-expression-tail"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable columnalign="left"><mtr><mtd><mi>P</mi><mo>(</mo><mi>X</mi><mo>&#x2265;</mo><mi>k</mi><mo>)</mo><mo>=</mo><munderover><mo>&#x2211;</mo><mrow><mi>x</mi><mo>=</mo><mi>k</mi></mrow><mi>n</mi></munderover><mi>P</mi><mo>(</mo><mi>X</mi><mo>=</mo><mi>x</mi><mo>)</mo></mtd></mtr><mtr><mtd><mo>=</mo><munderover><mo>&#x2211;</mo><mrow><mi>x</mi><mo>=</mo><mi>k</mi></mrow><mi>n</mi></munderover><mi>C</mi><mo>(</mo><mi>n</mi><mo>,</mo><mi>x</mi><mo>)</mo><msup><mi>p</mi><mi>x</mi></msup><msup><mrow><mo>(</mo><mn>1</mn><mo>&#x2212;</mo><mi>p</mi><mo>)</mo></mrow><mrow><mi>n</mi><mo>&#x2212;</mo><mi>x</mi></mrow></msup></mtd></mtr></mtable></math></div>
+                        <p th:text="#{study.formula.tail.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.tail.use}"></span></p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="formula-group" aria-labelledby="formula-simulation-title" data-formula-group="simulation">
+                <header class="formula-group-heading"><span class="formula-group-number">04</span><h3 id="formula-simulation-title" th:text="#{study.group.simulation}"></h3></header>
+                <p class="formula-notation" th:text="#{study.notation.simulation}"></p>
+                <div class="formula-grid">
+                    <article class="formula-card" data-formula="empirical">
+                        <h4 th:text="#{study.formula.empirical.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mover><mi>p</mi><mo>^</mo></mover><mi mathvariant="normal">sim</mi></msub><mo>=</mo><mfrac><mi>H</mi><mi>M</mi></mfrac></math></div>
+                        <p th:text="#{study.formula.empirical.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.empirical.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="error">
+                        <h4 th:text="#{study.formula.error.name}"></h4>
+                        <div class="formula-expression formula-expression-compact"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>&#x03B5;</mi><mo>=</mo><mo>|</mo><msub><mi>p</mi><mi mathvariant="normal">theory</mi></msub><mo>&#x2212;</mo><msub><mover><mi>p</mi><mo>^</mo></mover><mi mathvariant="normal">sim</mi></msub><mo>|</mo></math></div>
+                        <p th:text="#{study.formula.error.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.error.use}"></span></p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="formula-group" aria-labelledby="formula-grouping-title" data-formula-group="grouping">
+                <header class="formula-group-heading"><span class="formula-group-number">05</span><h3 id="formula-grouping-title" th:text="#{study.group.grouping}"></h3></header>
+                <p class="formula-notation" th:text="#{study.notation.grouping}"></p>
+                <div class="formula-grid">
+                    <article class="formula-card" data-formula="range">
+                        <h4 th:text="#{study.formula.range.name}"></h4>
+                        <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>R</mi><mo>=</mo><msub><mi>x</mi><mi mathvariant="normal">max</mi></msub><mo>&#x2212;</mo><msub><mi>x</mi><mi mathvariant="normal">min</mi></msub></math></div>
+                        <p th:text="#{study.formula.range.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.range.use}"></span></p>
+                    </article>
+                    <article class="formula-card" data-formula="sturges">
+                        <h4 th:text="#{study.formula.sturges.name}"></h4>
+                        <div class="formula-expression formula-expression-compact"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable columnalign="left"><mtr><mtd><msub><mi>K</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn><mo>+</mo><mn>3.322</mn><msub><mi mathvariant="normal">log</mi><mn>10</mn></msub><mi>M</mi></mtd></mtr><mtr><mtd><mi>K</mi><mo>=</mo><mi mathvariant="normal">max</mi><mo>(</mo><mn>1</mn><mo>,</mo><mi mathvariant="normal">round</mi><mo>(</mo><msub><mi>K</mi><mn>0</mn></msub><mo>)</mo><mo>)</mo></mtd></mtr></mtable></math></div>
+                        <p th:text="#{study.formula.sturges.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.sturges.use}"></span></p>
+                    </article>
+                    <article class="formula-card formula-card-wide" data-formula="width">
+                        <h4 th:text="#{study.formula.width.name}"></h4>
+                        <div class="formula-width-expressions">
+                            <div class="formula-expression"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>C</mi><mo>&#x2248;</mo><mfrac><mi>R</mi><mi>K</mi></mfrac></math></div>
+                            <div class="formula-expression formula-expression-compact"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>C</mi><mo>=</mo><mi mathvariant="normal">max</mi><mo>(</mo><mn>1</mn><mo>,</mo><mo>&#x2308;</mo><mfrac><mrow><mi>R</mi><mo>+</mo><mn>1</mn></mrow><mi>K</mi></mfrac><mo>&#x2309;</mo><mo>)</mo></math></div>
+                        </div>
+                        <p th:text="#{study.formula.width.meaning}"></p><p class="formula-use"><strong th:text="#{study.formula.used}"></strong> <span th:text="#{study.formula.width.use}"></span></p>
+                    </article>
+                </div>
+            </section>
+        </section>
+
+        <section class="method-limitations" aria-labelledby="method-limitations-title">
+            <h2 id="method-limitations-title" th:text="#{study.limitations.title}"></h2>
+            <ul>
+                <li th:text="#{study.limitations.sample}"></li>
+                <li th:text="#{study.limitations.outcome}"></li>
+                <li th:text="#{study.limitations.association}"></li>
+                <li th:text="#{study.limitations.model}"></li>
+            </ul>
+        </section>
+        <footer th:replace="~{fragments :: footer}"></footer>
+    </main>
+</div>
+</body>
+</html>

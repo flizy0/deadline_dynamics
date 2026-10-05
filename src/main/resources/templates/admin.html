@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ru" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments :: head(#{admin.title})}"></head><body><a class="skip-link" href="#main" th:text="#{common.skip}"></a><div class="app-shell"><aside th:replace="~{fragments :: sidebar}"></aside><th:block th:replace="~{fragments :: utilityBar(#{nav.admin})}"></th:block><main id="main" class="main-content" data-workspace>
+<header class="page-heading"><div><p class="eyebrow" th:text="#{admin.eyebrow}"></p><h1 th:text="#{admin.title}"></h1><p class="page-subtitle" th:text="#{admin.counts(${allCount},${realCount})}"></p></div><form method="post" th:action="@{/logout}"><button class="button button-secondary" type="submit"><i data-lucide="log-out" aria-hidden="true"></i><span th:text="#{admin.logout}"></span></button></form></header>
+<div class="notice" role="status" th:if="${message != null}" th:text="${message}"></div><div class="notice notice-error" role="alert" th:if="${error != null}" th:text="${error}"></div>
+<details class="details-panel" th:if="${errorDetail != null}"><summary th:text="#{admin.error.diagnostic}"></summary><p th:text="${errorDetail}"></p></details>
+<form class="import-form" method="post" enctype="multipart/form-data" th:action="@{/admin/import}">
+<label><span th:text="#{admin.format}"></span><select name="format"><option value="google" th:text="#{admin.googleFormat}"></option><option value="canonical" th:text="#{admin.canonicalFormat}"></option></select></label>
+<label><span th:text="#{admin.timezone}"></span><select name="timezone"><option value="Asia/Qyzylorda" th:text="#{admin.kazakhstan}"></option><option value="UTC">UTC</option><option value="Europe/Moscow">Europe/Moscow</option></select></label>
+<label><span th:text="#{admin.file}"></span><input type="file" name="file" accept=".csv,text/csv" required></label>
+<button class="button" type="submit"><i data-lucide="upload" aria-hidden="true"></i><span th:text="#{admin.submit}"></span></button>
+</form>
+<section class="data-section"><h2 th:text="#{admin.preparationTitle}"></h2><p th:text="#{admin.preparation}"></p><p th:text="#{admin.validation}"></p><p th:text="#{admin.idempotence}"></p><a th:href="@{/csv-template.csv}" th:text="#{admin.template}"></a><p class="notice" th:text="#{admin.noExamples}"></p></section>
+<footer th:replace="~{fragments :: footer}"></footer></main></div></body></html>
