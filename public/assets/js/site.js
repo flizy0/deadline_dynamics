@@ -424,7 +424,7 @@
           options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: {
             valueLabels: { mode: "pie" },
             legend: { position: "bottom", labels: { color: palette.muted, boxWidth: 9, usePointStyle: true, pointStyle: "circle", padding: 10,
-              generateLabels: () => labels.map((label, index) => ({ text: `${label} · ${formatNumber(counts[index])} (${percentOfEligible(counts[index])})`, fillStyle: paletteColors[index], strokeStyle: "#0f1211", lineWidth: 2, hidden: false, index, datasetIndex: 0 })) } },
+              generateLabels: () => labels.map((label, index) => ({ text: `${label} · ${formatNumber(counts[index])} (${percentOfEligible(counts[index])})`, fillStyle: paletteColors[index], strokeStyle: "#0f1211", lineWidth: 2, fontColor: palette.muted, hidden: false, index, datasetIndex: 0 })) } },
             tooltip: { ...chartTooltip(), callbacks: { ...chartTooltip().callbacks, label: context => `${formatNumber(context.raw)} (${percentOfEligible(context.raw)})` } }
           } }
         });
