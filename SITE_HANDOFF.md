@@ -2,6 +2,14 @@
 
 **Student Work Timing & Submission Study**
 
+## Current Static / Vercel Frontend (6 October 2026)
+
+The deployed static site is built from `public/` with `npm run build`; `npm run preview` serves `dist/`. The Java implementation described below remains a separate retained backend version.
+
+The owner's syllabus restricts Project-1 to weeks 1-5: events/combinatorics, probability, conditional probability, independence and frequency distributions/graphs. Discrete probability distributions begin in week 6. Static Method therefore displays only independence and relative frequency, with symbols and a short explanation of repeated trials. Public Lab displays simulated frequency counts, the share meeting a selected threshold and one group. It does not expose binomial notation/formulas, expected values, theoretical comparisons, convergence or confidence/error formulas. The existing probability core continues to calculate theory, averages and convergence internally; those values are not rendered. Keep this distinction when changing public content.
+
+Advanced seed controls are removed; each run receives an automatically generated seed. Data tables are available through each workspace's Table view, without a separate Exact values disclosure. Horizontal chart interactions explicitly use the y axis, vertical interactions use x; tooltips wrap long category labels. Screen styling and native controls use `color-scheme: only dark`, independent of the system theme.
+
 Current product iteration: 2-3 October 2026, collected-data report simplification. Read this before editing. Implementation and authorized primary import are integrated. Final clean build passed 95 Maven tests; isolated browser acceptance passed 379 layouts/170 canvases, and primary read-only acceptance passed 48 layouts/96 canvases. Measured evidence belongs in [`docs/VERIFICATION.md`](docs/VERIFICATION.md). Earlier verification totals describe the preceding iteration.
 
 ## Product Boundaries

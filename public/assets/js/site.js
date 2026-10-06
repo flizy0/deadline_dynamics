@@ -133,13 +133,37 @@
     container.append(table);
   }
 
+  function chartTooltip() {
+    return {
+      backgroundColor: "#121615", borderColor: "rgba(255,255,255,.14)", borderWidth: 1,
+      titleColor: "#e8ece9", bodyColor: "#c0c7c3", padding: 10, cornerRadius: 6,
+      titleFont: { size: 11, weight: "600" }, bodyFont: { size: 11 }, position: "nearest",
+      callbacks: { title: items => {
+        if (!items.length) return "";
+        const { chart, label } = items[0];
+        const maxWidth = Math.max(80, Math.min(300, chart.width - 44));
+        const lines = [""];
+        chart.ctx.save();
+        chart.ctx.font = `600 11px ${Chart.defaults.font.family}`;
+        String(label).split(/\s+/).forEach(word => {
+          const last = lines.length - 1;
+          const next = lines[last] ? `${lines[last]} ${word}` : word;
+          if (lines[last] && chart.ctx.measureText(next).width > maxWidth) lines.push(word);
+          else lines[last] = next;
+        });
+        chart.ctx.restore();
+        return lines;
+      } }
+    };
+  }
+
   function commonChartOptions(yLabel, max) {
     return {
       responsive: true, maintainAspectRatio: false, animation: false,
-      interaction: { mode: "index", intersect: false },
+      interaction: { mode: "index", axis: "x", intersect: false },
       plugins: {
         legend: { position: "bottom", labels: { boxWidth: 9, boxHeight: 9, usePointStyle: true, pointStyle: "circle", padding: 15 } },
-        tooltip: { backgroundColor: "#121615", borderColor: "rgba(255,255,255,.14)", borderWidth: 1, titleColor: "#e8ece9", bodyColor: "#c0c7c3", padding: 10, cornerRadius: 6 }
+        tooltip: chartTooltip()
       },
       scales: {
         x: { grid: { color: palette.grid }, ticks: { color: palette.muted, maxRotation: 0, autoSkip: false } },
@@ -151,8 +175,8 @@
   function horizontalOptions(xLabel, max) {
     return {
       responsive: true, maintainAspectRatio: false, indexAxis: "y", animation: false,
-      interaction: { mode: "index", intersect: false },
-      plugins: { legend: { position: "bottom", labels: { boxWidth: 9, boxHeight: 9, usePointStyle: true, pointStyle: "circle", padding: 15 } }, tooltip: { backgroundColor: "#121615", borderColor: "rgba(255,255,255,.14)", borderWidth: 1, titleColor: "#e8ece9", bodyColor: "#c0c7c3", padding: 10, cornerRadius: 6 } },
+      interaction: { mode: "index", axis: "y", intersect: false },
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 9, boxHeight: 9, usePointStyle: true, pointStyle: "circle", padding: 15 } }, tooltip: chartTooltip() },
       scales: {
         x: { beginAtZero: true, max, stacked: true, grid: { color: palette.grid }, ticks: { color: palette.muted, callback: value => max === 100 ? `${value}%` : value }, title: { display: true, text: xLabel, color: palette.muted, font: { size: 10 } } },
         y: { stacked: true, grid: { display: false }, ticks: { color: palette.muted, autoSkip: false } }
@@ -272,21 +296,18 @@
       const text = element("p", "sr-only");
       text.setAttribute("aria-live", "polite");
       workspace.append(text);
-      const details = document.createElement("details");
-      details.className = "exact-details";
-      const summary = element("summary", "", t("data.exact"));
       const table = element("div", "table-scroll");
       table.tabIndex = 0;
-      details.append(summary, table);
-      workspace.append(details);
+      table.hidden = options.defaultView !== "table";
+      workspace.append(table);
       parent.append(workspace);
-      return { workspace, controls, frame, canvas, text, details, table, chart: null, activeView: options.defaultView, variable: options.variable, kind: options.kind };
+      return { workspace, controls, frame, canvas, text, table, chart: null, activeView: options.defaultView, variable: options.variable, kind: options.kind };
     }
 
     function updatePressed(state) {
       state.controls.querySelectorAll("button").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.view === state.activeView)));
       state.frame.hidden = state.activeView === "table";
-      state.details.open = state.activeView === "table";
+      state.table.hidden = state.activeView !== "table";
       state.chart = destroyChart(state.chart);
     }
 
@@ -306,7 +327,7 @@
           type: "pie", data: { labels, datasets: [{ data: counts, backgroundColor: paletteColors, borderColor: "#0f1211", borderWidth: 2 }] },
           options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: {
             legend: { position: "bottom", labels: { color: palette.muted, boxWidth: 9, usePointStyle: true, pointStyle: "circle", padding: 12 } },
-            tooltip: { backgroundColor: "#121615", borderColor: "rgba(255,255,255,.14)", borderWidth: 1, titleColor: "#e8ece9", bodyColor: "#c0c7c3", padding: 10, callbacks: { label: context => `${formatNumber(context.raw)} (${formatPercent(100 * context.raw / study.eligible)})` } }
+            tooltip: { ...chartTooltip(), callbacks: { ...chartTooltip().callbacks, label: context => `${formatNumber(context.raw)} (${formatPercent(100 * context.raw / study.eligible)})` } }
           } }
         });
         return;
@@ -322,7 +343,7 @@
       }
       state.chart = new Chart(state.canvas, {
         type: "bar", data: { labels, datasets: [{ label: t("data.responses"), data: counts, backgroundColor: variable.key === "outcome" || variable.key === "extension" ? paletteColors : "rgba(73,191,174,.78)", borderColor: variable.key === "outcome" || variable.key === "extension" ? paletteColors : palette.teal, borderWidth: 1, borderRadius: 2 }] },
-        options: { ...horizontalOptions(t("data.axisCount"), undefined), plugins: { ...horizontalOptions("", undefined).plugins, legend: { display: false }, tooltip: { ...horizontalOptions("", undefined).plugins.tooltip, callbacks: { label: context => `${formatNumber(context.raw)} (${formatPercent(100 * context.raw / study.eligible)})` } } } }
+        options: { ...horizontalOptions(t("data.axisCount"), undefined), plugins: { ...horizontalOptions("", undefined).plugins, legend: { display: false }, tooltip: { ...chartTooltip(), callbacks: { ...chartTooltip().callbacks, label: context => `${formatNumber(context.raw)} (${formatPercent(100 * context.raw / study.eligible)})` } } } }
       });
     }
 
@@ -348,7 +369,15 @@
         type: "bar", data: { labels: categoryLabels, datasets: [
           { label: t("common.onTime"), data: variable.categories.map((item, i) => known[i] && percentage ? 100 * item.onTime / known[i] : item.onTime), backgroundColor: "rgba(73,191,174,.84)", borderColor: palette.teal, borderWidth: 1, borderRadius: 2 },
           { label: t("common.late"), data: variable.categories.map((item, i) => known[i] && percentage ? 100 * item.late / known[i] : item.late), backgroundColor: "rgba(200,118,111,.8)", borderColor: palette.coral, borderWidth: 1, borderRadius: 2 }
-        ] }, options: { ...options, plugins: { ...options.plugins, tooltip: { ...options.plugins.tooltip, callbacks: { label: context => percentage ? `${context.dataset.label}: ${formatPercent(context.raw)}` : `${context.dataset.label}: ${formatNumber(context.raw)}`, afterTitle: items => `${t("data.knownN")}: ${known[items[0].dataIndex]}` } } } }
+        ] }, options: { ...options, plugins: { ...options.plugins, tooltip: { ...options.plugins.tooltip, callbacks: {
+          ...options.plugins.tooltip.callbacks,
+          label: context => {
+            const item = variable.categories[context.dataIndex];
+            const count = context.datasetIndex === 0 ? item.onTime : item.late;
+            const share = known[context.dataIndex] ? formatPercent(100 * count / known[context.dataIndex]) : t("common.noData");
+            return `${context.dataset.label}: ${formatNumber(count)} (${share})`;
+          }
+        } } } }
       });
     }
 
@@ -398,19 +427,6 @@
     });
   }
 
-  function initMethodExample() {
-    const onTime = document.getElementById("exampleOnTime");
-    if (!onTime) return;
-    const known = study.onTime + study.late;
-    const decimal = known ? (study.onTime / known).toFixed(3) : t("common.noData");
-    const percent = known ? formatPercent(100 * study.onTime / known) : t("common.noData");
-    ["exampleOnTime", "exampleOnTimeEquation"].forEach(id => { document.getElementById(id).textContent = formatNumber(study.onTime); });
-    ["exampleLate"].forEach(id => { document.getElementById(id).textContent = formatNumber(study.late); });
-    ["exampleKnown", "exampleKnownEquation"].forEach(id => { document.getElementById(id).textContent = formatNumber(known); });
-    document.getElementById("exampleDecimal").textContent = decimal;
-    document.getElementById("examplePercent").textContent = percent;
-  }
-
   function randomSeed() {
     if (window.crypto && window.crypto.getRandomValues) {
       const values = new Uint32Array(1);
@@ -436,7 +452,6 @@
     let results = null;
     let chart = null;
     let rng = Math.random;
-    let activeSeed = null;
     let activeView = "distribution";
 
     function currentP() { return mode.value === "observed" ? observedP : Number(slider.value) / 100; }
@@ -468,21 +483,20 @@
       sizeInput.value = String(n);
       thresholdInput.value = String(k);
       thresholdInput.max = String(n);
-      const enteredSeed = document.getElementById("seed").value.trim();
-      activeSeed = enteredSeed !== "" && Number.isFinite(Number(enteredSeed)) ? Number(enteredSeed) >>> 0 : randomSeed();
-      const simulation = window.DeadlineProbability.simulateBinomial({ n, p, runs: repetitions, threshold: k, seed: activeSeed });
+      const simulation = window.DeadlineProbability.simulateBinomial({ n, p, runs: repetitions, threshold: k, seed: randomSeed() });
       rng = simulation.random;
       results = { n, p, k, repetitions, ...simulation, sim: simulation.empirical };
       document.getElementById("resultProbability").textContent = formatPercent(p * 100);
       document.getElementById("resultProbabilitySource").textContent = mode.value === "observed" ? `${study.onTime} / ${study.known} ${t("common.known").toLowerCase()}` : t("lab.manual");
       document.getElementById("resultGroupSize").textContent = formatNumber(n);
-      document.getElementById("resultExpected").textContent = formatNumber(n * p, 2);
+      document.getElementById("resultEventShare").textContent = formatPercent(simulation.simulatedTail * 100);
       document.getElementById("runsCaption").textContent = `${formatNumber(repetitions)} ${t("lab.runs")}`;
       story.innerHTML = "";
+      const hits = simulation.histogram.slice(k).reduce((sum, count) => sum + count, 0);
       [
-        [t("lab.theoryStory"), `${t("lab.expectedValue")}: <strong>${formatNumber(n * p, 2)}</strong>.<br>${t("lab.theoreticalTail")}: <strong>${formatPercent(simulation.theoreticalTail * 100)}</strong>.`],
-        [t("lab.simStory"), `${t("lab.average")}: <strong>${formatNumber(simulation.average, 2)}</strong>.<br>${t("lab.simulatedTail")}: <strong>${formatPercent(simulation.simulatedTail * 100)}</strong>.`],
-        [t("lab.compareStory"), `${t("lab.difference")}: <strong>${formatPercent(Math.abs(simulation.theoreticalTail - simulation.simulatedTail) * 100)}</strong>.`]
+        [t("lab.selectedEvent"), interpolate(t("lab.eventCondition"), { k: formatNumber(k), n: formatNumber(n) })],
+        [t("lab.eventCount"), interpolate(t("lab.eventCountText"), { hits: formatNumber(hits), runs: formatNumber(repetitions) })],
+        [t("lab.eventShare"), `<strong>${formatPercent(simulation.simulatedTail * 100)}</strong>`]
       ].forEach(([title, body]) => {
         const article = document.createElement("article");
         article.innerHTML = `<h3>${title}</h3><p>${body}</p>`;
@@ -490,10 +504,9 @@
       });
       const interpretation = document.createElement("article");
       interpretation.className = "interpretation";
-      const close = Math.abs(simulation.theoreticalTail - simulation.simulatedTail) <= 1.96 * Math.sqrt(Math.max(1e-12, simulation.theoreticalTail * (1 - simulation.theoreticalTail) / repetitions));
-      interpretation.innerHTML = `<h3>${t("lab.interpretation")}</h3><p>${t(close ? "lab.interpretClose" : "lab.interpretFar")}</p>`;
+      interpretation.innerHTML = `<h3>${t("lab.interpretation")}</h3><p>${t("lab.frequencyNote")}</p>`;
       story.append(interpretation);
-      makeTable(document.getElementById("simulatorExact"), [t("lab.tableX"), t("lab.tableTheory"), t("lab.tableSimulation"), t("lab.tableThreshold")], simulation.theory.map((probability, x) => [x, formatPercent(probability * 100), formatPercent(simulation.empirical[x] * 100), x >= k ? "✓" : ""]), t("lab.chartDistribution"));
+      makeTable(document.getElementById("simulatorExact"), [t("lab.tableX"), t("lab.tableFrequency"), t("lab.tableSimulation"), t("lab.tableThreshold")], simulation.histogram.map((count, x) => [x, formatNumber(count), formatPercent(simulation.empirical[x] * 100), x >= k ? "✓" : ""]), t("lab.chartDistribution"));
       resultPanel.hidden = false;
       activeView = document.querySelector('[data-sim-view][aria-selected="true"]')?.dataset.simView || "distribution";
       renderView();
@@ -508,31 +521,21 @@
         document.getElementById("simulatorChartText").textContent = t("lab.chartGroup").replace("{n}", String(results.n));
         return;
       }
-      const labels = results.theory.map((_, value) => String(value));
-      let config;
-      if (activeView === "convergence") {
-        const points = results.checkpoints.map(point => ({ x: point.x, y: point.y * 100 }));
-        const ref = [{ x: 1, y: results.theoreticalTail * 100 }, { x: results.repetitions, y: results.theoreticalTail * 100 }];
-        config = {
-          type: "line", data: { datasets: [
-            { label: t("view.empirical"), data: points, parsing: false, borderColor: palette.teal, backgroundColor: "rgba(73,191,174,.08)", borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0 },
-            { label: t("view.theoretical"), data: ref, parsing: false, borderColor: palette.blue, borderWidth: 1.5, borderDash: [5, 4], pointRadius: 0, tension: 0 }
-          ] }, options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "nearest", intersect: false }, plugins: { legend: { position: "bottom", labels: { boxWidth: 9, usePointStyle: true, pointStyle: "circle" } }, tooltip: { backgroundColor: "#121615", borderColor: "rgba(255,255,255,.14)", borderWidth: 1 } }, scales: { x: { type: "linear", min: 1, max: results.repetitions, grid: { color: palette.grid }, title: { display: true, text: t("view.axisRuns"), color: palette.muted }, ticks: { maxTicksLimit: 6, callback: value => formatNumber(value) } }, y: { min: 0, max: 100, grid: { color: palette.grid }, title: { display: true, text: t("view.axisEstimate"), color: palette.muted }, ticks: { callback: value => `${value}%` } } } }
-        };
-        document.getElementById("simulatorChartText").textContent = `${t("lab.chartConvergence").replace("{k}", String(results.k))}. ${t("view.theoretical")}: ${formatPercent(results.theoreticalTail * 100)}.`;
-      } else {
-        const thresholdColors = labels.map((_, value) => activeView === "tail" && value >= results.k ? "rgba(208,160,58,.72)" : "rgba(93,166,189,.72)");
-        const datasets = [
-          { type: "bar", label: t("view.theoretical"), data: results.theory.map(value => value * 100), backgroundColor: thresholdColors, borderColor: activeView === "tail" ? thresholdColors : palette.blue, borderWidth: 1, borderRadius: 2 },
-          { type: "line", label: t("view.empirical"), data: results.sim.map(value => value * 100), borderColor: palette.teal, backgroundColor: "rgba(73,191,174,.08)", borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0 }
-        ];
-        config = { type: "bar", data: { labels, datasets }, options: { ...commonChartOptions(t("view.axisProbability"), undefined), scales: { ...commonChartOptions("", undefined).scales, x: { ...commonChartOptions("", undefined).scales.x, title: { display: true, text: t("lab.tableX"), color: palette.muted } }, y: { ...commonChartOptions("", undefined).scales.y, title: { display: true, text: t("view.axisProbability"), color: palette.muted }, ticks: { callback: value => `${formatNumber(value, 1)}%` } } } } };
-        document.getElementById("simulatorChartText").textContent = activeView === "tail"
-          ? `${t("lab.chartTail").replace("{k}", String(results.k))}. ${t("lab.theoreticalTail")}: ${formatPercent(results.theoreticalTail * 100)}; ${t("lab.simulatedTail")}: ${formatPercent(results.simulatedTail * 100)}.`
-          : `${t("lab.chartDistribution")}. ${t("lab.expectedValue")}: ${formatNumber(results.n * results.p, 2)}.`;
-      }
-      canvas.setAttribute("aria-label", t(activeView === "tail" ? "lab.chartTail" : activeView === "convergence" ? "lab.chartConvergence" : "lab.chartDistribution").replace("{k}", String(results.k)).replace("{n}", String(results.n)));
-      chart = new Chart(canvas, config);
+      const labels = results.histogram.map((_, value) => String(value));
+      const colors = labels.map((_, value) => activeView === "tail" && value >= results.k ? "rgba(208,160,58,.72)" : "rgba(73,191,174,.78)");
+      const options = commonChartOptions(t("lab.tableFrequency"), undefined);
+      options.plugins.legend.display = false;
+      options.plugins.tooltip.callbacks.label = context => `${t("lab.tableFrequency")}: ${formatNumber(context.raw)} (${formatPercent(100 * context.raw / results.repetitions)})`;
+      options.scales.x.title = { display: true, text: t("lab.tableX"), color: palette.muted };
+      options.scales.x.ticks.autoSkip = true;
+      options.scales.x.ticks.maxTicksLimit = 12;
+      options.scales.y.ticks.precision = 0;
+      const title = t(activeView === "tail" ? "lab.chartTail" : "lab.chartDistribution").replace("{k}", String(results.k));
+      document.getElementById("simulatorChartText").textContent = title;
+      canvas.setAttribute("aria-label", title);
+      chart = new Chart(canvas, {
+        type: "bar", data: { labels, datasets: [{ label: t("lab.tableFrequency"), data: results.histogram, backgroundColor: colors, borderColor: colors, borderWidth: 1, borderRadius: 2 }] }, options
+      });
     }
 
     function renderOneGroup() {
@@ -571,6 +574,5 @@
 
   initOverview();
   initData();
-  initMethodExample();
   initSimulator();
 })();

@@ -266,6 +266,15 @@ body { overflow-x: hidden; }
 .data-workspace-section .exact-details summary { font-size: 12px; }
 
 .method-page { gap: 17px; }
+.method-model { padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.method-model h2 { font-size: 14px; }
+.method-model > p { max-width: 100ch; color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+.method-symbols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px 18px; margin: 14px 0 0; }
+.method-symbols > div { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 8px; align-items: baseline; }
+.method-symbols dt { color: var(--blue); font-family: "Cambria Math", "Times New Roman", serif; font-size: 17px; }
+.method-symbols dd { margin: 0; color: var(--text-secondary); font-size: 13px; }
+.method-page .formula-card > p { color: var(--text-secondary); font-size: 14px; line-height: 1.45; }
+.method-page .formula-card .combination-definition { margin-top: 9px; color: var(--muted); font-family: "Cambria Math", "Times New Roman", serif; font-size: 15px; }
 .timeline-section { padding: 0 0 17px; border-bottom: 1px solid var(--line-strong); }
 .timeline-section > h2 { margin: 0 0 12px; font-size: 15px; }
 .research-timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; margin: 0; padding: 0; list-style: none; }
@@ -314,6 +323,7 @@ body { overflow-x: hidden; }
 .single-group-panel .section-heading p { font-size: 14px; }
 
 @media (max-width: 767px) {
+  .method-symbols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .research-question { font-size: 15px; }
   .data-chapter { padding: 16px 0 19px; }
   .data-chapter-heading { grid-template-columns: 36px minmax(0, 1fr); gap: 8px; }
@@ -328,6 +338,7 @@ body { overflow-x: hidden; }
   .formula-grid, .formula-grid-four, .formula-grid-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 479px) {
+  .method-symbols { grid-template-columns: minmax(0, 1fr); }
   .brand small { max-width: 20ch; }
   .source-metadata { gap: 7px 12px; }
   .source-metadata #sourcePeriod { margin-top: 1px; }

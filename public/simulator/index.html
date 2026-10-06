@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#080a09">
-  <meta name="description" content="Interactive binomial probability experiment lab.">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="only dark"><meta name="theme-color" content="#080a09">
+  <meta name="description" content="Independent submission trials and observed frequencies.">
   <title>Probability Lab | Deadline Dynamics</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/site.css">
   <script defer src="/assets/js/lucide.min.js"></script><script defer src="/assets/js/app.js"></script><script defer src="/assets/js/chart.umd.min.js"></script><script defer src="/assets/js/study-data.js"></script><script defer src="/assets/js/probability.js"></script><script defer src="/assets/js/site-copy.js"></script><script defer src="/assets/js/site.js"></script>
@@ -24,8 +24,8 @@
       <div class="utility-actions"><nav class="language-switcher" aria-label="Язык"><a href="/simulator/?lang=kk" data-language="kk" lang="kk" hreflang="kk" title="Қазақша">ҚАЗ</a><a href="/simulator/?lang=ru" data-language="ru" lang="ru" hreflang="ru" title="Русский">РУС</a><a href="/simulator/?lang=en" data-language="en" lang="en" hreflang="en" title="English">ENG</a></nav></div>
     </header><div class="drawer-overlay" data-nav-overlay hidden aria-hidden="true"></div>
     <main id="main" class="main-content static-content" data-workspace data-page="simulator">
-      <header class="page-heading"><div><p class="eyebrow" data-i18n="lab.eyebrow">ЭКСПЕРИМЕНТ С БИНОМИАЛЬНОЙ МОДЕЛЬЮ</p><h1 data-i18n="lab.title">Лаборатория вероятностей</h1><p class="page-subtitle" data-i18n="lab.subtitle">Если вероятность сдачи в срок равна p, сколько студентов из группы n могут успеть?</p></div></header>
-      <section class="model-explainer"><div class="model-equation"><span data-i18n="lab.individual">Один студент — одно испытание</span><strong>X ~ Binomial(n, p)</strong><span data-i18n="lab.group">X — число сдач в срок в группе</span></div><p data-i18n="lab.explanation">Каждый студент — отдельное испытание: успех означает сдачу не позже первоначального дедлайна, вероятность успеха одинакова для всех.</p></section>
+      <header class="page-heading"><div><p class="eyebrow" data-i18n="lab.eyebrow">НЕЗАВИСИМЫЕ СОБЫТИЯ И ЧАСТОТЫ</p><h1 data-i18n="lab.title">Лаборатория вероятностей</h1><p class="page-subtitle" data-i18n="lab.subtitle">Если вероятность сдачи в срок равна p, сколько студентов из группы n могут успеть?</p></div></header>
+      <section class="model-explainer"><div class="model-equation"><span data-i18n="lab.individual">Один студент — одно испытание</span><strong>P(A) = p</strong><span data-i18n="lab.successEvent">A — сдача вовремя</span></div><p data-i18n="lab.explanation">Каждый студент — отдельное испытание: успех означает сдачу не позже первоначального дедлайна, вероятность успеха одинакова для всех.</p></section>
       <section class="simulation-controls" aria-labelledby="controls-title"><div class="section-heading"><div><p class="eyebrow" data-i18n="lab.setupEyebrow">НАСТРОЙКИ ЭКСПЕРИМЕНТА</p><h2 id="controls-title" data-i18n="lab.setupTitle">Выберите вероятность и размер группы</h2></div></div>
         <div class="lab-control-grid">
           <label><span data-i18n="lab.probabilitySource">Источник вероятности p</span><select id="probabilityMode"><option value="observed" data-i18n="lab.observed">Наблюдаемая в анкете</option><option value="manual" data-i18n="lab.manual">Задать вручную</option></select></label>
@@ -36,18 +36,17 @@
           <div class="run-control"><button type="button" class="button" id="runExperiment"><i data-lucide="play" aria-hidden="true"></i><span data-i18n="lab.run">Запустить эксперимент</span></button></div>
         </div>
         <p class="observed-origin" id="observedOrigin" data-i18n="lab.observedOrigin">Наблюдаемая p = 17 / 23 известных исходов</p>
-        <details class="advanced-settings"><summary data-i18n="lab.advanced">Дополнительные настройки</summary><label class="seed-control"><span data-i18n="lab.seed">Начальное значение генератора (необязательно)</span><input id="seed" type="number" inputmode="numeric" placeholder="Random"></label><p data-i18n="lab.seedHelp">Одинаковые параметры и одно значение seed воспроизводят тот же результат.</p></details>
       </section>
 
       <section class="experiment-results" id="experimentResults" hidden aria-labelledby="results-title">
         <div class="section-heading"><div><p class="eyebrow" data-i18n="lab.resultEyebrow">РЕЗУЛЬТАТ ЭКСПЕРИМЕНТА</p><h2 id="results-title" data-i18n="lab.resultTitle">Что может произойти в группе?</h2></div><span class="result-runs" id="runsCaption"></span></div>
-        <div class="result-metrics"><div><span data-i18n="lab.probability">Вероятность успеха</span><strong id="resultProbability">-</strong><small id="resultProbabilitySource"></small></div><div><span data-i18n="lab.resultGroup">Размер одной группы</span><strong id="resultGroupSize">-</strong></div><div><span data-i18n="lab.expected">Ожидаемое число сдач в срок</span><strong id="resultExpected">-</strong></div></div>
-        <div class="view-switcher viz-switcher" role="tablist" aria-label="Способ визуализации" data-i18n-aria="view.chartType"><button role="tab" type="button" data-sim-view="distribution" aria-selected="true" data-i18n="lab.viewDistribution">Распределение</button><button role="tab" type="button" data-sim-view="tail" aria-selected="false" data-i18n="lab.viewTail">Хвостовая вероятность</button><button role="tab" type="button" data-sim-view="convergence" aria-selected="false" data-i18n="lab.viewConvergence">Сходимость</button><button role="tab" type="button" data-sim-view="group" aria-selected="false" data-i18n="lab.viewGroup">Одна группа</button></div>
-        <div class="chart-frame" id="simChartFrame"><canvas id="simulatorChart" role="img" aria-label="Теоретическое и эмпирическое биномиальное распределение"></canvas></div>
+        <div class="result-metrics"><div><span data-i18n="lab.probability">Вероятность успеха</span><strong id="resultProbability">-</strong><small id="resultProbabilitySource"></small></div><div><span data-i18n="lab.resultGroup">Размер одной группы</span><strong id="resultGroupSize">-</strong></div><div><span data-i18n="lab.eventShare">Доля групп с выбранным исходом</span><strong id="resultEventShare">-</strong></div></div>
+        <div class="view-switcher viz-switcher" role="tablist" aria-label="Способ визуализации" data-i18n-aria="view.chartType"><button role="tab" type="button" data-sim-view="distribution" aria-selected="true" data-i18n="lab.viewDistribution">Частоты результатов</button><button role="tab" type="button" data-sim-view="tail" aria-selected="false" data-i18n="lab.viewTail">Выбранное событие</button><button role="tab" type="button" data-sim-view="group" aria-selected="false" data-i18n="lab.viewGroup">Одна группа</button></div>
+        <div class="chart-frame" id="simChartFrame"><canvas id="simulatorChart" role="img" aria-label="Частоты результатов повторений"></canvas></div>
         <div class="single-group-panel" id="singleGroupPanel" hidden><div class="section-heading"><div><h3 data-i18n="lab.oneGroupTitle">Одна случайная группа</h3></div><button type="button" class="button button-secondary" id="anotherGroup"><i data-lucide="shuffle" aria-hidden="true"></i><span data-i18n="lab.anotherGroup">Смоделировать ещё одну группу</span></button></div><div class="experiment-dots" id="experimentDots" aria-live="polite"></div><p class="group-result" id="groupResult"></p><p class="chart-description sr-only" id="groupAccessible"></p></div>
         <p class="chart-description sr-only" id="simulatorChartText" aria-live="polite"></p>
         <div class="simulation-story" id="simulationStory"></div>
-        <details class="exact-details"><summary data-i18n="lab.exact">Точные значения и сравнение с теорией</summary><div id="simulatorExact" class="table-scroll" tabindex="0"></div></details>
+        <details class="exact-details"><summary data-i18n="lab.exact">Таблица результатов повторений</summary><div id="simulatorExact" class="table-scroll" tabindex="0"></div></details>
       </section>
       <footer class="page-footer"><span data-i18n="brand.title">Deadline Dynamics</span></footer>
     </main>

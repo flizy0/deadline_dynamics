@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#080a09">
-  <meta name="description" content="Research timeline and Probability and Statistics formula reference.">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="only dark"><meta name="theme-color" content="#080a09">
+  <meta name="description" content="Independent events and relative frequencies in a repeated experiment.">
   <title>Method | Deadline Dynamics</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/site.css">
   <script defer src="/assets/js/lucide.min.js"></script><script defer src="/assets/js/app.js"></script><script defer src="/assets/js/study-data.js"></script><script defer src="/assets/js/site-copy.js"></script><script defer src="/assets/js/site.js"></script>
@@ -24,84 +24,30 @@
       <div class="utility-actions"><nav class="language-switcher" aria-label="Язык"><a href="/method/?lang=kk" data-language="kk" lang="kk" hreflang="kk" title="Қазақша">ҚАЗ</a><a href="/method/?lang=ru" data-language="ru" lang="ru" hreflang="ru" title="Русский">РУС</a><a href="/method/?lang=en" data-language="en" lang="en" hreflang="en" title="English">ENG</a></nav></div>
     </header><div class="drawer-overlay" data-nav-overlay hidden aria-hidden="true"></div>
     <main id="main" class="main-content static-content method-page" data-workspace data-page="method">
-      <header class="page-heading"><div><p class="eyebrow" data-i18n="method.eyebrow">ФОРМУЛЫ И ХОД ИССЛЕДОВАНИЯ</p><h1 data-i18n="method.title">Методика</h1></div></header>
+      <header class="page-heading"><div><p class="eyebrow" data-i18n="method.eyebrow">КАК РАБОТАЕТ СИМУЛЯТОР</p><h1 data-i18n="method.title">Методика</h1><p class="page-subtitle" data-i18n="method.subtitle">Независимые события и частоты повторных экспериментов.</p></div></header>
 
-      <section class="timeline-section" aria-labelledby="timeline-title">
-        <h2 id="timeline-title" data-i18n="method.timeline.title">Этапы исследования</h2>
-        <ol class="research-timeline">
-          <li><span class="timeline-number">01</span><div><h3 data-i18n="method.timeline.collect.title">СОБРАТЬ</h3><p data-i18n="method.timeline.collect.body">Ответы Google Forms</p></div></li>
-          <li><span class="timeline-number">02</span><div><h3 data-i18n="method.timeline.select.title">ОТОБРАТЬ</h3><p data-i18n="method.timeline.select.body">Подходящие задания</p></div></li>
-          <li><span class="timeline-number">03</span><div><h3 data-i18n="method.timeline.describe.title">ОПИСАТЬ</h3><p data-i18n="method.timeline.describe.body">Частоты и проценты</p></div></li>
-          <li><span class="timeline-number">04</span><div><h3 data-i18n="method.timeline.compare.title">СРАВНИТЬ</h3><p data-i18n="method.timeline.compare.body">Исходы по категориям</p></div></li>
-          <li><span class="timeline-number">05</span><div><h3 data-i18n="method.timeline.model.title">СМОДЕЛИРОВАТЬ</h3><p data-i18n="method.timeline.model.body">Биномиальная вероятность и симуляция</p></div></li>
-        </ol>
-      </section>
-
-      <nav class="method-index" aria-label="Разделы формул" data-i18n-aria="method.index">
-        <a href="#describe" data-i18n="method.group.describe">ОПИСАНИЕ ДАННЫХ</a>
-        <a href="#compare" data-i18n="method.group.compare">СРАВНЕНИЕ</a>
-        <a href="#probability" data-i18n="method.group.probability">ВЕРОЯТНОСТНАЯ МОДЕЛЬ</a>
-        <a href="#simulation" data-i18n="method.group.simulation">СИМУЛЯЦИЯ</a>
-        <a href="#grouping" data-i18n="method.group.grouping">ГРУППИРОВКА ЧИСЛОВЫХ ДАННЫХ</a>
-      </nav>
-
-      <section class="formula-section" id="describe" aria-labelledby="describe-title">
-        <div class="formula-section-heading"><span class="chapter-number">01</span><div><h2 id="describe-title" data-i18n="method.group.describe">ОПИСАНИЕ ДАННЫХ</h2></div></div>
-        <div class="formula-grid formula-grid-four">
-          <article class="formula-card"><h3 data-i18n="method.formula.absolute.name">Абсолютная частота</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation" data-i18n="method.formula.absolute.equation">fᵢ = число наблюдений в категории i</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.absolute.use">Число наблюдений в категории i.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.relative.name">Относительная частота</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">r<sub>i</sub> = f<sub>i</sub> / N</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.relative.use">Доля категории от общего числа наблюдений.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.percentage.name">Процентная частота</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">percentage<sub>i</sub> = (f<sub>i</sub> / N) × 100%</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.percentage.use">Доля категории, выраженная в процентах.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.mode.name">Мода</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation" data-i18n="method.formula.mode.equation">Мода = категория с наибольшей частотой</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.mode.use">Категория с наибольшей частотой.</p></div></article>
-        </div>
-      </section>
-
-      <section class="formula-section" id="compare" aria-labelledby="compare-title">
-        <div class="formula-section-heading"><span class="chapter-number">02</span><div><h2 id="compare-title" data-i18n="method.group.compare">СРАВНЕНИЕ</h2></div></div>
-        <div class="formula-grid formula-grid-two">
-          <article class="formula-card"><h3 data-i18n="method.formula.observed.name">Наблюдаемая доля сдачи вовремя</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">p̂ = N<sub>on time</sub> / (N<sub>on time</sub> + N<sub>late</sub>)</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.observed.use">Оценка p по заданиям с известным исходом.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.difference.name">Разность в процентных пунктах</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">Δpp = p̂<sub>1</sub> − p̂<sub>2</sub></div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.difference.use">Сравнение двух долей в процентных пунктах, а не в процентах изменения.</p></div></article>
-        </div>
-      </section>
-
-      <section class="formula-section" id="probability" aria-labelledby="probability-title">
-        <div class="formula-section-heading"><span class="chapter-number">03</span><div><h2 id="probability-title" data-i18n="method.group.probability">ВЕРОЯТНОСТНАЯ МОДЕЛЬ</h2></div></div>
-        <div class="formula-grid formula-grid-three">
-          <article class="formula-card"><h3 data-i18n="method.formula.combinations.name">Сочетания</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">C(n,k) = n! / (k!(n−k)!)</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.combinations.use">Число способов выбрать k успехов из n испытаний.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.binomial.name">Биномиальная вероятность</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">P(X = k) = C(n,k)p<sup>k</sup>(1−p)<sup>n−k</sup></div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.binomial.use">Вероятность ровно k успехов в n независимых испытаниях.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.expected.name">Математическое ожидание</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">E[X] = np</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.expected.use">Среднее число успехов в группе размера n.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.variance.name">Дисперсия</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">Var(X) = np(1−p)</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.variance.use">Мера разброса числа успехов относительно ожидания.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.deviation.name">Стандартное отклонение</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">σ = √(np(1−p))</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.deviation.use">Типичный масштаб отклонения числа успехов.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.tail.name">Хвостовая вероятность</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">P(X ≥ k) = <span class="formula-sum">Σ<sub>x=k</sub><sup>n</sup></span> C(n,x)p<sup>x</sup>(1−p)<sup>n−x</sup></div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.tail.use">Вероятность получить не менее k успехов.</p></div></article>
-        </div>
+      <section class="method-model" aria-labelledby="model-title">
+        <h2 id="model-title" data-i18n="method.model.title">Один студент — одно испытание</h2>
+        <p data-i18n="method.model.process">Для каждого студента генерируется случайное число от 0 до 1. Если оно меньше p, результат считается успешной сдачей. Это повторяется для n студентов, затем для M групп.</p>
+        <p data-i18n="method.model.probability">p задаётся вручную или берётся как доля сдач вовремя среди известных исходов анкеты. Ожидающие сдачи исключены из этой доли. В модели p одинаково для всех, а испытания независимы.</p>
+        <dl class="method-symbols">
+          <div><dt>n</dt><dd data-i18n="method.symbol.n">Студентов в одной группе</dd></div>
+          <div><dt>p</dt><dd data-i18n="method.symbol.p">Вероятность успеха, от 0 до 1</dd></div>
+          <div><dt>k</dt><dd data-i18n="method.symbol.k">Выбранный порог успешных сдач</dd></div>
+          <div><dt>M</dt><dd data-i18n="method.symbol.runs">Количество смоделированных групп</dd></div>
+          <div><dt>m</dt><dd data-i18n="method.symbol.hits">Групп с интересующим результатом</dd></div>
+        </dl>
       </section>
 
       <section class="formula-section" id="simulation" aria-labelledby="simulation-title">
-        <div class="formula-section-heading"><span class="chapter-number">04</span><div><h2 id="simulation-title" data-i18n="method.group.simulation">СИМУЛЯЦИЯ</h2></div></div>
+        <div class="formula-section-heading"><span class="chapter-number">01</span><div><h2 id="simulation-title" data-i18n="method.core.title">НЕЗАВИСИМОСТЬ И ЧАСТОТЫ</h2></div></div>
         <div class="formula-grid formula-grid-two">
-          <article class="formula-card"><h3 data-i18n="method.formula.empirical.name">Эмпирическая вероятность</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation" data-i18n="method.formula.empirical.equation">p̂_sim = успешные симуляции / все симуляции</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.empirical.use">Доля успешных симуляций среди всех повторений.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.error.name">Ошибка симуляции</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">Error = |p<sub>theory</sub> − p<sub>simulation</sub>|</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.error.use">Абсолютное расхождение теоретической и эмпирической вероятностей.</p></div></article>
+          <article class="formula-card"><h3 data-i18n="method.formula.independent.name">Независимые события</h3><div class="formula-equation">P(A ∩ B) = P(A) · P(B)</div><p data-i18n="method.formula.independent.use">A и B — сдача вовремя двух студентов. В эксперименте исход одного студента не влияет на исход другого.</p></article>
+          <article class="formula-card"><h3 data-i18n="method.formula.frequency.name">Относительная частота</h3><div class="formula-equation">r = m / M</div><p data-i18n="method.formula.frequency.use">m групп дали интересующий результат из M повторений. Для доли в процентах r умножают на 100.</p></article>
         </div>
       </section>
 
-      <section class="formula-section" id="grouping" aria-labelledby="grouping-title">
-        <div class="formula-section-heading"><span class="chapter-number">05</span><div><h2 id="grouping-title" data-i18n="method.group.grouping">ГРУППИРОВКА ЧИСЛОВЫХ ДАННЫХ</h2></div></div>
-        <div class="formula-grid formula-grid-three">
-          <article class="formula-card"><h3 data-i18n="method.formula.range.name">Размах</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">R = Max − Min</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.range.use">Разность максимального и минимального значений.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.sturges.name">Правило Стерджесса</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">K = 1 + 3.322 log<sub>10</sub>(N)</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.sturges.use">Приближённое число интервалов для группировки числовых данных.</p></div></article>
-          <article class="formula-card"><h3 data-i18n="method.formula.width.name">Ширина класса</h3><span class="formula-label" data-i18n="method.formulaLabel">Формула</span><div class="formula-equation">C ≈ R / K</div><div class="used-for"><strong data-i18n="method.usedFor">Используется для</strong><p data-i18n="method.formula.width.use">Приблизительная ширина одного интервала.</p></div></article>
-        </div>
-        <p class="formula-footnote" data-i18n="method.groupingNote">Применяется к числовым результатам симуляции, а не к категориальным ответам анкеты.</p>
-      </section>
-
-      <section class="worked-example" aria-labelledby="example-title">
-        <div class="section-heading"><div><p class="eyebrow" data-i18n="method.example.eyebrow">ОДИН ПРИМЕР</p><h2 id="example-title" data-i18n="method.example.title">Пример на текущих данных</h2></div></div>
-        <div class="worked-counts">
-          <div><span data-i18n="method.example.onTime">Вовремя</span><strong id="exampleOnTime">17</strong></div>
-          <div><span data-i18n="method.example.late">С опозданием</span><strong id="exampleLate">6</strong></div>
-          <div><span data-i18n="method.example.known">Известные исходы</span><strong id="exampleKnown">23</strong></div>
-        </div>
-        <div class="worked-equations"><p>p̂ = <span id="exampleOnTimeEquation">17</span> / <span id="exampleKnownEquation">23</span></p><p>p̂ ≈ <span id="exampleDecimal">0.739</span> ≈ <strong id="examplePercent">73.9%</strong></p></div>
-      </section>
+      <p class="formula-footnote" data-i18n="method.frequency.note">Диаграмма показывает, сколько групп получили каждый результат. Для события «не менее k» учитываются группы, в которых порог достигнут или превышен. Частота описывает проведённые повторения.</p>
 
       <section class="method-limitations" aria-labelledby="limitations-title">
         <h2 id="limitations-title" data-i18n="method.example.limitations.title">Ограничения</h2>

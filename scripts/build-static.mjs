@@ -43,8 +43,7 @@ const categoryKeys = data.variables.flatMap(variable => variable.categories.map(
 const variableKeys = data.variables.map(variable => `data.variable.${variable.key}`);
 const dynamicKeys = ["view.simpleBar", "view.line", "view.pie", "view.percentageBar", "view.multipleBar", "view.table", "data.recommended"];
 const methodHtml = publicHtml[3];
-if ((methodHtml.match(/class="formula-card"/g) || []).length !== 17) throw new Error("The method page must contain all 17 formula cards.");
-if ((methodHtml.match(/class="timeline-number"/g) || []).length !== 5) throw new Error("The research timeline must contain five steps.");
+if ((methodHtml.match(/class="formula-card"/g) || []).length !== 2) throw new Error("The method page must contain the two week 1-5 formulas.");
 if ((methodHtml.match(/data-i18n="method\.example\.limitations\.(?:one|two|three)"/g) || []).length !== 3) throw new Error("The method page must show exactly three limitations.");
 if (/<select\b/.test(publicHtml[1]) || !publicHtml[1].includes('id="dataChapters"')) throw new Error("The data page must use independent, local chart controls.");
 for (const locale of ["ru", "kk", "en"]) {
